@@ -73,7 +73,7 @@ export default function Navbar({ activeSection }: NavbarProps) {
         <div className="flex items-center gap-3">
           {/* GitHub button - visible on desktop and tablet */}
           <a
-            href="https://github.com/janebaluna"
+            href="https://github.com/janebaluna/Portfolio"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-amberwood-950/40 text-ochre text-[10px] uppercase tracking-wider font-bold rounded-full hover:bg-ochre hover:text-stone-950 transition-all duration-300 shadow-md border border-ochre/20 hover:scale-105 shrink-0"
@@ -112,7 +112,7 @@ export default function Navbar({ activeSection }: NavbarProps) {
           
           <div className="pt-4 border-t border-amberwood-900/20">
             <a
-              href="https://github.com/janebaluna"
+              href="https://github.com/janebaluna/Portfolio"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 px-4 py-2.5 bg-ochre/10 hover:bg-ochre hover:text-stone-950 text-ochre text-[10px] uppercase tracking-widest font-bold rounded-xl transition-all duration-300 border border-ochre/25 w-full"

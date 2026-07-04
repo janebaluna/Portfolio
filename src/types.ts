@@ -13,6 +13,7 @@ export interface Project {
   hasInteractiveCalculator?: boolean;
   hasInteractiveBrickBreaker?: boolean;
   hasInteractiveLoveResponder?: boolean;
+  liveUrl?: string;
 }
 
 export interface Skill {

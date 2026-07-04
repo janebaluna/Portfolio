@@ -460,6 +460,35 @@ const getMoodMessage = (mood: string): string => {
   };
   return messages[mood.toLowerCase()] || "No matter what mood you’re in, my love for you doesn’t change. 🌹";
 };`
+  },
+  {
+    id: "exam-tracker",
+    num: 19,
+    title: "Exam Tracker",
+    icon: "📊",
+    category: "Web Application / Academic Utilities",
+    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800",
+    desc: "A fully featured academic management system and study planner designed to help students track upcoming exams, organize preparation schedules, and dynamically compute target grades.",
+    details: [
+      "Designed a centralized dashboard that summarizes exam countdown clocks, priorities, and preparation status",
+      "Created an interactive grade planner utility that computes required final exam scores to achieve specific target grades",
+      "Built structured lists for task management, subject organization, and key topics under review",
+      "Ensured a highly accessible and responsive design optimized for study sessions on desktop and mobile browsers",
+      "Deployed the completed application live to Netlify for real-time academic planning and ease of student access"
+    ],
+    tools: ["HTML5", "CSS3 Custom Properties", "JavaScript (ES6+)", "Netlify Deployment", "Responsive Layouts"],
+    outcome: "An empowering educational tool that streamlines test preparation, enhances time management, and assists students in maintaining academic excellence. Accessible live at examtrack1.netlify.app.",
+    liveUrl: "https://6a48ab673942a75d6d90241a--examtrack1.netlify.app/",
+    codeSnippet: `// Dynamic Target Grade calculation function
+function calculateRequiredScore(currentGrade, weight, targetGrade) {
+  // weight is represented as a decimal (e.g. 0.40 for 40%)
+  const currentContribution = currentGrade * (1 - weight);
+  const requiredScore = (targetGrade - currentContribution) / weight;
+  
+  return requiredScore > 100 
+    ? { feasible: false, score: Math.round(requiredScore) }
+    : { feasible: true, score: Math.max(0, Math.round(requiredScore)) };
+}`
   }
 ];
 

@@ -420,6 +420,15 @@ ${statsPending > 0
                 <Play className="w-3.5 h-3.5 fill-current" />
                 Launch Interactive Emulator Below
               </a>
+              <a
+                href="https://6a48ab673942a75d6d90241a--examtrack1.netlify.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-transparent border-2 border-ochre text-ochre text-xs uppercase tracking-widest font-bold rounded-full hover:bg-ochre hover:text-stone-950 transition-all duration-300 shadow-lg hover:scale-105"
+              >
+                <ArrowUpRight className="w-4 h-4" />
+                Explore Live Web Application
+              </a>
             </div>
           </div>
 

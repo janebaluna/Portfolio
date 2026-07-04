@@ -72,10 +72,40 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
             />
           </div>
 
-          {/* Description */}
-          <p className="text-amberwood-200 text-sm md:text-base leading-relaxed font-light">
-            {project.desc}
-          </p>
+          {/* Description and Live Link */}
+          <div className="space-y-4">
+            <p className="text-amberwood-200 text-sm md:text-base leading-relaxed font-light">
+              {project.desc}
+            </p>
+            {project.liveUrl && (
+              <div className="pt-2">
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-ochre text-stone-950 text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-ochre/80 transition-all shadow-md hover:scale-102 active:scale-98"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-3.5 h-3.5"
+                  >
+                    <path d="M15 3h6v6" />
+                    <path d="M10 14 21 3" />
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  </svg>
+                  Launch Live Site
+                </a>
+              </div>
+            )}
+          </div>
 
           {/* Embedded Calculator (if applicable) */}
           {project.hasInteractiveCalculator && (
