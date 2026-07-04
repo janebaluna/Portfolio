@@ -1,0 +1,6 @@
+{
+  "name": "Maison Portfolio",
+  "description": "An elegant, aesthetic digital portfolio of Jane Marie Baluna, a Grade 12 Computer Programming and Mechatronics student.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

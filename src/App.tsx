@@ -1,0 +1,872 @@
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import {
+  Code,
+  Paintbrush,
+  Palette,
+  Layout,
+  FileText,
+  Database,
+  Server,
+  Cpu,
+  Smartphone,
+  Settings,
+  Heart,
+  Lightbulb,
+  CheckSquare,
+  Activity,
+  Compass,
+  Users,
+  Clock,
+  MessageSquare,
+  Layers,
+  Award,
+  Mail,
+  MapPin,
+  GraduationCap,
+  ArrowRight,
+  ArrowUpRight,
+  ExternalLink
+} from "lucide-react";
+
+import Navbar from "./components/Navbar";
+import ProjectModal from "./components/ProjectModal";
+import InteractiveResume from "./components/InteractiveResume";
+import CapstoneBlog from "./components/CapstoneBlog";
+import {
+  projects,
+  skills,
+  softSkills,
+  achievements,
+  goals,
+  hobbies,
+  contactInfo,
+  education,
+  technicalCompetencies,
+  softCompetencies
+} from "./data";
+import { Project } from "./types";
+
+export default function App() {
+  const [activeSection, setActiveSection] = useState("home");
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: -100, y: -100 });
+  const [glowPos, setGlowPos] = useState({ x: -100, y: -100 });
+
+  // Contact form submission state
+  const [formSubmitted, setFormFeedback] = useState(false);
+
+  // Custom Cursor tracking
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  // Lerp effect for the soft glow custom cursor
+  useEffect(() => {
+    let animId: number;
+    const lerp = () => {
+      setGlowPos((prev) => {
+        const dx = mousePos.x - prev.x;
+        const dy = mousePos.y - prev.y;
+        return {
+          x: prev.x + dx * 0.12,
+          y: prev.y + dy * 0.12,
+        };
+      });
+      animId = requestAnimationFrame(lerp);
+    };
+    animId = requestAnimationFrame(lerp);
+    return () => cancelAnimationFrame(animId);
+  }, [mousePos]);
+
+  // Section visibility tracking for Navbar highlight
+  useEffect(() => {
+    const sections = document.querySelectorAll("section");
+    const handleScroll = () => {
+      let current = "home";
+      const scrollPos = window.scrollY + 200;
+
+      sections.forEach((section) => {
+        const top = section.offsetTop;
+        const height = section.offsetHeight;
+        if (scrollPos >= top && scrollPos < top + height) {
+          current = section.id;
+        }
+      });
+      setActiveSection(current);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Icon mapping resolver
+  const getIcon = (name: string) => {
+    const map: Record<string, React.ComponentType<any>> = {
+      Code,
+      Paintbrush,
+      Palette,
+      Layout,
+      FileText,
+      Database,
+      Server,
+      Cpu,
+      Smartphone,
+      Settings,
+      Heart,
+      Lightbulb,
+      CheckSquare,
+      Activity,
+      Compass,
+      Users,
+      Clock,
+      MessageSquare,
+      Layers,
+      Award,
+    };
+    const Comp = map[name];
+    return Comp ? <Comp className="w-5 h-5 text-ochre" /> : <Code className="w-5 h-5 text-ochre" />;
+  };
+
+  const handleContactSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    e.currentTarget.reset();
+    setFormFeedback(true);
+    setTimeout(() => setFormFeedback(false), 5000);
+  };
+
+  const hoverHandlers = {
+    onMouseEnter: () => setIsHovered(true),
+    onMouseLeave: () => setIsHovered(false),
+  };
+
+  return (
+    <div className="bg-[#180b07] text-[#f3e8da] font-sans antialiased relative selection:bg-amberwood-300 selection:text-amberwood-950 grid-bg min-h-screen">
+      {/* Dynamic Cursor Elements */}
+      <div
+        className="hidden lg:block fixed pointer-events-none rounded-full z-[10000] -translate-x-1/2 -translate-y-1/2 transition-transform duration-200"
+        style={{
+          left: mousePos.x,
+          top: mousePos.y,
+          width: isHovered ? "10px" : "6px",
+          height: isHovered ? "10px" : "6px",
+          backgroundColor: isHovered ? "#f5efe6" : "#c48f65",
+        }}
+      />
+      <div
+        className="hidden lg:block fixed pointer-events-none rounded-full z-[9999] -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-out"
+        style={{
+          left: glowPos.x,
+          top: glowPos.y,
+          width: isHovered ? "44px" : "32px",
+          height: isHovered ? "44px" : "32px",
+          border: "1px solid rgba(196, 143, 101, 0.4)",
+          backgroundColor: isHovered ? "rgba(196, 143, 101, 0.15)" : "transparent",
+        }}
+      />
+
+      {/* Decorative ambient background glows */}
+      <div className="fixed inset-0 pointer-events-none z-0 no-print">
+        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] ambient-glow" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[70%] h-[70%] ambient-glow" />
+        <div className="absolute top-[40%] left-[30%] w-[50%] h-[50%] ambient-glow opacity-60" />
+      </div>
+
+      {/* Navigation Header */}
+      <Navbar activeSection={activeSection} />
+
+      <main className="relative z-10 pt-36 md:pt-24 space-y-32 md:space-y-40 pb-20">
+        
+        {/* HOMEPAGE HERO */}
+        <section
+          id="home"
+          className="relative min-h-[90vh] flex flex-col justify-center px-4 md:px-6 lg:px-16 max-w-7xl mx-auto py-10 scroll-mt-28"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            {/* Left intro copy */}
+            <div className="lg:col-span-6 space-y-8 text-left">
+              <motion.div
+                initial={{ opacity: 0, x: -15 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+                className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amberwood-950/60 border border-amberwood-800/40"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-ochre animate-pulse"></span>
+                <span className="text-[9px] uppercase tracking-[0.25em] text-amberwood-300 font-semibold font-sans">
+                  CREATIVE CURATOR & DESIGNER
+                </span>
+              </motion.div>
+
+              <motion.h1
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.1 }}
+                className="font-serif text-5xl md:text-6xl xl:text-7xl text-[#f3e8da] leading-[1.05] font-light"
+              >
+                BALUNA <br />
+                <span className="italic text-ochre font-normal text-glow">JANE MARIE</span>
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.2 }}
+                className="text-amberwood-200 max-w-lg text-sm md:text-base leading-relaxed font-light"
+              >
+                A student passionate about technology, innovation, and digital creativity, exploring programming and hands-on projects through academic learning and the AI Academy. This portfolio reflects my growth, creativity, and interest in building skills for future opportunities in tech.
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.3 }}
+                className="flex items-center space-x-4 pt-4"
+              >
+                <a
+                  href="#projects"
+                  {...hoverHandlers}
+                  className="px-6 py-3 rounded-full bg-amberwood-800 text-parchment text-[11px] uppercase tracking-widest font-semibold hover:bg-[#834626] transition-all duration-300 shadow-xl hover:shadow-amberwood-950/50"
+                >
+                  EXPLORE WORKS
+                </a>
+                <a
+                  href="#contact"
+                  {...hoverHandlers}
+                  className="px-6 py-3 rounded-full border border-amberwood-800/60 text-amberwood-200 text-[11px] uppercase tracking-widest font-semibold hover:border-amberwood-400 hover:text-parchment transition-all duration-300"
+                >
+                  SAY HELLO
+                </a>
+              </motion.div>
+            </div>
+
+            {/* Right side portrait frame */}
+            <div className="lg:col-span-6 flex flex-col items-center justify-center">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="hero-main-img botanical-card"
+              >
+                <img
+                  src="https://res.cloudinary.com/dkzomhqe0/image/upload/v1782302221/ChatGPT_Image_Feb_14_2026_02_39_40_PM_pdy1po.png?auto=compress&cs=tinysrgb&w=800"
+                  alt="Jane Marie Baluna - Professional Portrait"
+                  referrerPolicy="no-referrer"
+                  className="aspect-[3/4] object-cover rounded-xl"
+                />
+              </motion.div>
+              <div className="flex justify-between items-center mt-5 px-2 w-full max-w-[480px] text-[10px] tracking-widest text-amberwood-400 font-medium">
+                <span>VOLUME I / PORTRAIT</span>
+                <span>PROFESSIONAL EDITION</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ABOUT ME */}
+        <section id="about" className="max-w-7xl mx-auto px-4 md:px-6 lg:px-16 scroll-mt-28">
+          <div className="text-center space-y-4 mb-16 md:mb-20">
+            <span className="text-xs uppercase tracking-[0.3em] text-ochre font-semibold block">
+              CURATED PERSONA
+            </span>
+            <h2 className="font-serif text-3xl md:text-5xl text-[#f3e8da] font-light">The Narrative</h2>
+            <div className="w-16 h-[1px] bg-amberwood-600 mx-auto" />
+          </div>
+
+          {/* Core Personas with exact original images */}
+          <div className="flex flex-wrap justify-center gap-8 md:gap-12 mb-16 md:mb-20">
+            {[
+              {
+                title: "CHILDLIKE PERSON",
+                img: "https://res.cloudinary.com/dkzomhqe0/image/upload/v1782301741/girl_hdixik.jpg?auto=compress&cs=tinysrgb&w=400"
+              },
+              {
+                title: "AESTHETIC PERSON",
+                img: "https://res.cloudinary.com/dkzomhqe0/image/upload/v1782302254/th_tncg0s.jpg?auto=compress&cs=tinysrgb&w=400",
+                isHighlight: true
+              },
+              {
+                title: "JOYFUL PERSON",
+                img: "https://res.cloudinary.com/dkzomhqe0/image/upload/v1782302259/trese_ujvriu.jpg?auto=compress&cs=tinysrgb&w=400"
+              },
+              {
+                title: "FRIENDLY PERSON",
+                img: "https://res.cloudinary.com/dkzomhqe0/image/upload/v1782302234/IMG_20251217_190523_521_-1062941991_fpse4k.jpg?auto=compress&cs=tinysrgb&w=400"
+              }
+            ].map((pers, idx) => (
+              <div key={idx} className="flex flex-col items-center group cursor-pointer" {...hoverHandlers}>
+                <div className="circle-img">
+                  <img
+                    src={pers.img}
+                    alt={pers.title}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <span
+                  className={`text-[10px] uppercase tracking-[0.2em] mt-4 transition-colors ${
+                    pers.isHighlight
+                      ? "text-ochre font-semibold"
+                      : "text-amberwood-300 group-hover:text-parchment"
+                  }`}
+                >
+                  {pers.title}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Narrative bio block */}
+          <div className="max-w-4xl mx-auto bg-amberwood-950/50 border border-amberwood-900/40 p-8 md:p-12 rounded-3xl relative overflow-hidden botanical-card">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-amberwood-900/10 rounded-full blur-2xl pointer-events-none" />
+            <div className="prose prose-invert max-w-none text-amberwood-200 text-sm md:text-lg leading-relaxed space-y-6 font-light text-center">
+              <p className="italic text-glow leading-relaxed">
+                "As a Grade 12 student at the Sisters of Mary, I am currently taking up Computer Programming and Mechatronics. My academic journey has helped me develop strong technical, problem-solving, and logical thinking skills, while also strengthening my interest in technology and innovation. Participating in the AI Academy has been a valuable and transformative experience. It introduced me to the power of Artificial Intelligence and how it can be applied beyond coding — supporting creativity, improving efficiency, and solving real-world problems in smarter ways. I am passionate about learning new technologies, especially in programming and AI-driven tools. Through continuous practice and exploration, I aim to grow my skills and prepare myself for future opportunities in the tech industry."
+              </p>
+              <div className="w-12 h-[1px] bg-amberwood-800 mx-auto" />
+              <p className="text-xs uppercase tracking-widest text-amberwood-400">
+                MAISON PORTFOLIO • CURATED ARCHIVE
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* SKILLS */}
+        <section id="skills" className="max-w-7xl mx-auto px-4 md:px-6 lg:px-16 scroll-mt-28">
+          <div className="text-center space-y-4 mb-16 md:mb-20">
+            <span className="text-xs uppercase tracking-[0.3em] text-ochre font-semibold block">
+              CRAFT & EXPERTISE
+            </span>
+            <h2 className="font-serif text-3xl md:text-5xl text-[#f3e8da] font-light">20 Skills Portfolio</h2>
+            <div className="w-16 h-[1px] bg-amberwood-600 mx-auto" />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Technical skills */}
+            <div className="space-y-6 text-left">
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="p-2 bg-amberwood-950/60 rounded-xl text-ochre border border-amberwood-900/40">
+                  <Cpu className="w-5 h-5 text-ochre" />
+                </div>
+                <h3 className="font-serif text-2xl text-parchment font-light italic">
+                  Technical Spectrum (10)
+                </h3>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {skills.map((skill, idx) => (
+                  <div
+                    key={idx}
+                    {...hoverHandlers}
+                    className="p-4 bg-amberwood-950/30 border border-amberwood-900/40 rounded-xl flex items-center space-x-3 botanical-card cursor-pointer"
+                  >
+                    {getIcon(skill.icon)}
+                    <span className="text-[11px] uppercase tracking-widest text-amberwood-200">
+                      {skill.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Soft skills */}
+            <div className="space-y-6 text-left">
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="p-2 bg-amberwood-950/60 rounded-xl text-ochre border border-amberwood-900/40">
+                  <Users className="w-5 h-5 text-ochre" />
+                </div>
+                <h3 className="font-serif text-2xl text-parchment font-light italic">
+                  Soft Capabilities (10)
+                </h3>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {softSkills.map((skill, idx) => (
+                  <div
+                    key={idx}
+                    {...hoverHandlers}
+                    className="p-4 bg-amberwood-950/30 border border-amberwood-900/40 rounded-xl flex items-center space-x-3 botanical-card cursor-pointer"
+                  >
+                    {getIcon(skill.icon)}
+                    <span className="text-[11px] uppercase tracking-widest text-amberwood-200">
+                      {skill.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ACHIEVEMENTS */}
+        <section id="achievements" className="max-w-7xl mx-auto px-4 md:px-6 lg:px-16 scroll-mt-28">
+          <div className="text-center space-y-4 mb-16 md:mb-20">
+            <span className="text-xs uppercase tracking-[0.3em] text-ochre font-semibold block">
+              CHRONICLES
+            </span>
+            <h2 className="font-serif text-3xl md:text-5xl text-[#f3e8da] font-light">10 Major Achievements</h2>
+            <div className="w-16 h-[1px] bg-amberwood-600 mx-auto" />
+          </div>
+
+          <div className="relative border-l border-amberwood-900/50 ml-4 md:ml-8 max-w-4xl mx-auto space-y-8 text-left">
+            {achievements.map((ach) => (
+              <div
+                key={ach.num}
+                {...hoverHandlers}
+                className="relative pl-8 md:pl-10 botanical-card p-5 rounded-2xl hover:bg-amberwood-950/20 cursor-pointer"
+              >
+                <div className="absolute -left-[21px] top-6 w-3 h-3 rounded-full bg-ochre border-2 border-[#180b07]" />
+                <span className="text-[10px] uppercase tracking-widest text-ochre font-semibold">
+                  {ach.tag}
+                </span>
+                <h3 className="font-serif text-xl text-amberwood-100 font-light italic mt-1">
+                  {ach.num}. {ach.title}
+                </h3>
+                <p className="text-amberwood-300 text-sm font-light mt-2 max-w-3xl leading-relaxed">
+                  {ach.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* GOALS */}
+        <section id="goals" className="max-w-7xl mx-auto px-4 md:px-6 lg:px-16 scroll-mt-28">
+          <div className="text-center space-y-4 mb-16 md:mb-20">
+            <span className="text-xs uppercase tracking-[0.3em] text-ochre font-semibold block">
+              ASPIRATIONS
+            </span>
+            <h2 className="font-serif text-3xl md:text-5xl text-[#f3e8da] font-light">Earthy Visions & Goals</h2>
+            <div className="w-16 h-[1px] bg-amberwood-600 mx-auto" />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            {/* Left quotation quote */}
+            <div className="lg:col-span-5 bg-[#1b0d09] border border-amberwood-900/40 rounded-2xl p-8 flex flex-col justify-center relative overflow-hidden text-center">
+              <div className="absolute -top-6 -left-2 text-amberwood-900/10 text-9xl font-serif select-none">
+                “
+              </div>
+              <blockquote className="relative z-10 space-y-4">
+                <span className="text-[9px] uppercase tracking-[0.35em] text-ochre font-semibold block">
+                  LOOKING FORWARD
+                </span>
+                <p className="font-serif text-lg md:text-xl italic text-amberwood-200 leading-relaxed text-glow">
+                  "My journey doesn't stop at graduation. I continuously set new milestones that challenge me to grow beyond my limits and strengthen both my technical and creative abilities. I aim to keep learning, improving, and exploring new ideas that expand my skills in technology and design."
+                </p>
+              </blockquote>
+              <div className="absolute -bottom-12 -right-4 text-amberwood-900/10 text-9xl font-serif select-none">
+                ”
+              </div>
+            </div>
+
+            {/* Right Goals listing */}
+            <div className="lg:col-span-7 bg-amberwood-950/20 border border-amberwood-900/30 rounded-2xl p-8 space-y-6 botanical-card text-left">
+              <h3 className="font-serif text-2xl text-amberwood-200 font-light italic border-b border-amberwood-900/30 pb-4">
+                My Core 7 Goals
+              </h3>
+              <div className="space-y-5">
+                {goals.map((g) => (
+                  <div key={g.id} className="flex items-start space-x-3">
+                    <span className="text-[9px] font-semibold text-ochre bg-[#27150e] px-2.5 py-1 rounded-md border border-amberwood-900/40 flex-shrink-0">
+                      {g.id}
+                    </span>
+                    <p className="text-amberwood-200 text-sm font-light mt-0.5">
+                      {g.title}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* HOBBIES */}
+        <section id="hobbies" className="max-w-7xl mx-auto px-4 md:px-6 lg:px-16 scroll-mt-28">
+          <div className="text-center space-y-4 mb-16 md:mb-20">
+            <span className="text-xs uppercase tracking-[0.3em] text-ochre font-semibold block">
+              RITUALS
+            </span>
+            <h2 className="font-serif text-3xl md:text-5xl text-[#f3e8da] font-light">10 Creative Hobbies</h2>
+            <div className="w-16 h-[1px] bg-amberwood-600 mx-auto" />
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+            {hobbies.map((hob) => (
+              <div
+                key={hob.num}
+                {...hoverHandlers}
+                className="bg-amberwood-950/40 rounded-xl overflow-hidden border border-amberwood-900/40 botanical-card group cursor-pointer"
+              >
+                <div className="h-36 overflow-hidden relative">
+                  <img
+                    src={hob.image}
+                    alt={hob.alt}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover filter sepia contrast-125 brightness-90 transition-transform duration-700 group-hover:scale-110"
+                  />
+                </div>
+                <div className="p-3 text-center border-t border-amberwood-900/20">
+                  <h4 className="font-serif text-xs font-light text-amberwood-200">
+                    {hob.num}. {hob.title}
+                  </h4>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* PROJECTS */}
+        <section id="projects" className="max-w-7xl mx-auto px-4 md:px-6 lg:px-16 scroll-mt-28">
+          <div className="text-center space-y-4 mb-16 md:mb-20">
+            <span className="text-xs uppercase tracking-[0.3em] text-ochre font-semibold block">
+              CRAFT GALLERY
+            </span>
+            <h2 className="font-serif text-3xl md:text-5xl text-[#f3e8da] font-light">Curated Projects</h2>
+            <div className="w-16 h-[1px] bg-amberwood-600 mx-auto" />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {projects.map((proj) => (
+              <div
+                key={proj.id}
+                onClick={() => setSelectedProject(proj)}
+                {...hoverHandlers}
+                className="bg-[#1b0d09]/40 border border-amberwood-900/40 rounded-2xl overflow-hidden flex flex-col project-card botanical-card group cursor-pointer text-left"
+              >
+                <div className="p-4 space-y-4 flex-grow">
+                  <div className="w-full overflow-hidden relative bg-amberwood-950 rounded-xl h-48">
+                    <img
+                      src={proj.image}
+                      alt={proj.title}
+                      referrerPolicy="no-referrer"
+                      className="project-img w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">{proj.icon}</span>
+                    <h4 className="font-serif text-base text-amberwood-100 font-light italic">
+                      {proj.num.toString().padStart(2, "0")}. {proj.title}
+                    </h4>
+                  </div>
+                  <p className="text-amberwood-300 text-xs font-light leading-relaxed">
+                    {proj.desc.substring(0, 85)}...
+                  </p>
+                </div>
+                <div className="p-4 border-t border-amberwood-900/20 flex justify-between items-center text-xs">
+                  <span className="text-ochre tracking-widest font-semibold uppercase text-[9px]">
+                    {proj.category}
+                  </span>
+                  <span className="text-amberwood-200 flex items-center space-x-1 font-medium">
+                    <span>Details</span>
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* COMMUNITY CAPSTONE BLOG SECTION */}
+        <section id="capstone" className="max-w-7xl mx-auto px-4 md:px-6 lg:px-16 scroll-mt-28">
+          <div className="text-center space-y-4 mb-16 md:mb-20 no-print">
+            <span className="text-xs uppercase tracking-[0.3em] text-ochre font-semibold block">
+              SOCIALLY RESPONSIBLE TECH
+            </span>
+            <h2 className="font-serif text-3xl md:text-5xl text-[#f3e8da] font-light">Community Capstone</h2>
+            <div className="w-16 h-[1px] bg-amberwood-600 mx-auto" />
+          </div>
+          
+          <CapstoneBlog />
+        </section>
+
+        {/* INTERACTIVE RESUME SECTION */}
+        <section id="resume" className="max-w-7xl mx-auto px-6 lg:px-16 scroll-mt-28">
+          <div className="text-center space-y-4 mb-20 no-print">
+            <span className="text-xs uppercase tracking-[0.3em] text-ochre font-semibold block">Professional Profile</span>
+            <h2 class="font-serif text-3xl md:text-5xl text-[#f3e8da] font-light">My Resume</h2>
+            <div class="w-16 h-[1px] bg-amberwood-600 mx-auto"></div>
+          </div>
+          
+          {/* Main content which handles tabs and printing */}
+          <div className="no-print">
+            <InteractiveResume />
+          </div>
+
+          {/* Printable Layout directly loaded here so it prints perfectly */}
+          <div className="hidden print:block text-black bg-white p-8 font-sans max-w-4xl mx-auto">
+            <div className="border-b-2 border-gray-800 pb-4 mb-6">
+              <h1 className="text-3xl font-bold text-gray-900">{contactInfo.name}</h1>
+              <p className="text-gray-600 uppercase tracking-wider text-xs font-semibold">{contactInfo.title}</p>
+              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
+                <span>📍 {contactInfo.location}</span>
+                <span>✉️ {contactInfo.email}</span>
+                <span>🎓 {contactInfo.school}</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-12 gap-8">
+              {/* Left Printable Column */}
+              <div className="col-span-4 space-y-6">
+                <div>
+                  <h3 className="font-bold text-xs uppercase tracking-wider border-b border-gray-300 pb-1 mb-2 text-gray-900">TECHNICAL COMPETENCIES</h3>
+                  <div className="space-y-3">
+                    {technicalCompetencies.map((tech, idx) => (
+                      <div key={idx}>
+                        <h4 className="text-xs font-semibold text-gray-800">{tech.category}</h4>
+                        <p className="text-[10px] text-gray-600">{tech.items.join(", ")}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="font-bold text-xs uppercase tracking-wider border-b border-gray-300 pb-1 mb-2 text-gray-900">SOFT CAPABILITIES</h3>
+                  <div className="space-y-2">
+                    {softCompetencies.map((soft, idx) => (
+                      <div key={idx} className="text-[10px]">
+                        <span className="font-semibold text-gray-800">{soft.name}</span>
+                        <p className="text-gray-600">{soft.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Printable Column */}
+              <div className="col-span-8 space-y-6">
+                <div>
+                  <h3 className="font-bold text-xs uppercase tracking-wider border-b border-gray-300 pb-1 mb-3 text-gray-900">EDUCATION & ACADEMICS</h3>
+                  <div className="space-y-4">
+                    {education.map((edu, idx) => (
+                      <div key={idx} className="space-y-1">
+                        <div className="flex justify-between text-xs font-semibold text-gray-900">
+                          <span>{edu.degree}</span>
+                          <span className="font-mono text-gray-500">{edu.period}</span>
+                        </div>
+                        <p className="text-xs text-amber-900 font-medium">{edu.school}</p>
+                        <ul className="list-disc list-inside text-[10px] text-gray-700 pl-1 space-y-1">
+                          {edu.details.map((detail, dIdx) => (
+                            <li key={dIdx}>{detail}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="font-bold text-xs uppercase tracking-wider border-b border-gray-300 pb-1 mb-3 text-gray-900">TECHNICAL PROJECTS</h3>
+                  <div className="space-y-3">
+                    <div className="text-xs">
+                      <p className="font-semibold text-gray-900">Decimal to Binary Converter & Ones Counter (C#)</p>
+                      <p className="text-[10px] text-gray-600">Built a desktop Windows Forms application supporting real-time bitwise conversion and mathematical counting routines.</p>
+                    </div>
+                    <div className="text-xs">
+                      <p className="font-semibold text-gray-900">Interactive Web Calculator (HTML, CSS Grid, JavaScript)</p>
+                      <p className="text-[10px] text-gray-600">Developed a tactile grid calculator featuring custom styling, division error protection, and dynamic keyboard event bindings.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* LEARNING JOURNAL / REFLECTIONS */}
+        <section id="reflections" className="max-w-7xl mx-auto px-4 md:px-6 lg:px-16 scroll-mt-28">
+          <div className="text-center space-y-4 mb-16 md:mb-20">
+            <span className="text-xs uppercase tracking-[0.3em] text-ochre font-semibold block">
+              Academic Journals
+            </span>
+            <h2 className="font-serif text-3xl md:text-5xl text-[#f3e8da] font-light">Learning Reflections</h2>
+            <div className="w-16 h-[1px] bg-amberwood-600 mx-auto" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto text-left">
+            <div className="bg-amberwood-950/40 border border-amberwood-900/40 rounded-3xl p-8 md:p-10 space-y-4 hover:border-amberwood-700 transition-colors relative overflow-hidden botanical-card">
+              <span className="text-[10px] text-ochre font-semibold uppercase tracking-widest block">
+                Entry 1: Aesthetic Digital Layout & Visual Composition
+              </span>
+              <h3 className="font-serif text-2xl text-amberwood-100 font-light italic">
+                The Concept of Visual Balance
+              </h3>
+              <p className="text-amberwood-200 text-sm md:text-base leading-relaxed font-light mb-4">
+                Last week, I dove deep into the Canva ecosystem to experiment with spatial layouts, hierarchy, and color harmony. I focused on creating a balanced design that feels both modern and timeless.
+              </p>
+              <div className="border-t border-amberwood-900/30 pt-4 mt-2">
+                <strong className="font-medium text-ochre text-xs uppercase tracking-wider block mb-1">
+                  Key Takeaway:
+                </strong>
+                <p className="text-amberwood-300 text-sm font-light leading-relaxed">
+                  Mastering Canva allowed me to translate my ideas into visual realities. It taught me the principles of visual hierarchy, color theory, and typography. Combining Canva with AI tools like image generators and text assistants has made my creative process faster, more dynamic, and infinitely more exploratory.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-amberwood-950/40 border border-amberwood-900/40 rounded-3xl p-8 md:p-10 space-y-4 hover:border-amberwood-700 transition-colors relative overflow-hidden botanical-card">
+              <span className="text-[10px] text-ochre font-semibold uppercase tracking-widest block">
+                Entry 2: Navigating the AI Frontier
+              </span>
+              <h3 className="font-serif text-2xl text-amberwood-100 font-light italic">
+                Evolving the Collaborative Partner
+              </h3>
+              <p className="text-amberwood-200 text-sm md:text-base leading-relaxed font-light mb-4">
+                Today at the AI Academy, my perspective on technology shifted. I explored how artificial intelligence isn't just a basic tool, but a collaborative partner that can amplify human creativity.
+              </p>
+              <div className="border-t border-amberwood-900/30 pt-4 mt-2">
+                <strong className="font-medium text-ochre text-xs uppercase tracking-wider block mb-1">
+                  Key Takeaway:
+                </strong>
+                <p className="text-amberwood-300 text-sm font-light leading-relaxed">
+                  The AI Academy was a transformative journey. I discovered that AI isn't a threat to human creativity, but rather a powerful amplifier. Learning prompt engineering taught me the art of communication with machines. I realized that my unique value lies in combining my human intuition and design sensibility with the computational power of AI tools.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CONTACT */}
+        <section id="contact" className="max-w-7xl mx-auto px-4 md:px-6 lg:px-16 pb-12 scroll-mt-28">
+          <div className="text-center space-y-4 mb-16 md:mb-20">
+            <span className="text-xs uppercase tracking-[0.3em] text-ochre font-semibold block">
+              Let's Connect
+            </span>
+            <h2 className="font-serif text-3xl md:text-5xl text-[#f3e8da] font-light">Contact Coordinates</h2>
+            <div className="w-16 h-[1px] bg-amberwood-600 mx-auto" />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 max-w-5xl mx-auto text-left">
+            {/* Contact details */}
+            <div className="lg:col-span-5 space-y-6">
+              <h3 className="font-serif text-2xl text-amberwood-100 font-light italic">Direct Channels</h3>
+              <p className="text-amberwood-300 text-sm leading-relaxed font-light">
+                You can reach me through my main contact channels listed below. Feel free to send me a message anytime if you have questions, ideas, or collaboration opportunities.
+              </p>
+              <div className="space-y-4 pt-2">
+                <a
+                  href={`mailto:${contactInfo.email}`}
+                  className="flex items-center space-x-3.5 p-4 bg-amberwood-950/30 border border-amberwood-900/40 rounded-2xl hover:border-ochre transition-colors cursor-pointer"
+                  {...hoverHandlers}
+                >
+                  <Mail className="w-5 h-5 text-ochre" />
+                  <div>
+                    <span className="text-[10px] text-amberwood-400 font-semibold uppercase tracking-wider block">
+                      Email Address
+                    </span>
+                    <span className="text-sm text-amberwood-100 font-light">{contactInfo.email}</span>
+                  </div>
+                </a>
+
+                <div className="flex items-center space-x-3.5 p-4 bg-amberwood-950/30 border border-amberwood-900/40 rounded-2xl">
+                  <MapPin className="w-5 h-5 text-ochre" />
+                  <div>
+                    <span className="text-[10px] text-amberwood-400 font-semibold uppercase tracking-wider block">
+                      Primary Location
+                    </span>
+                    <span className="text-sm text-amberwood-100 font-light">{contactInfo.location}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Contact Form */}
+            <div className="lg:col-span-7 bg-[#1b0d09]/40 border border-amberwood-900/40 p-8 rounded-3xl relative">
+              <form onSubmit={handleContactSubmit} className="space-y-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-ochre uppercase tracking-wider">Your Name</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Jane Doe"
+                      className="w-full bg-[#180b07] border border-amberwood-900/40 rounded-xl p-3 text-xs text-amberwood-100 focus:outline-none focus:border-ochre transition-colors"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-ochre uppercase tracking-wider">Your Email</label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="jane@example.com"
+                      className="w-full bg-[#180b07] border border-amberwood-900/40 rounded-xl p-3 text-xs text-amberwood-100 focus:outline-none focus:border-ochre transition-colors"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-ochre uppercase tracking-wider">Subject</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Inquiry / Mentorship"
+                    className="w-full bg-[#180b07] border border-amberwood-900/40 rounded-xl p-3 text-xs text-amberwood-100 focus:outline-none focus:border-ochre transition-colors"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-ochre uppercase tracking-wider">Message</label>
+                  <textarea
+                    rows={4}
+                    required
+                    placeholder="Hello, I wanted to reach out regarding..."
+                    className="w-full bg-[#180b07] border border-amberwood-900/40 rounded-xl p-3 text-xs text-amberwood-100 focus:outline-none focus:border-ochre transition-colors resize-none"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  {...hoverHandlers}
+                  className="w-full py-3 bg-amberwood-800 text-parchment text-xs font-semibold uppercase tracking-widest rounded-xl hover:bg-[#834626] transition-colors shadow-md"
+                >
+                  Send Transmission
+                </button>
+              </form>
+
+              {/* Dynamic Form Submission Banner */}
+              <AnimatePresence>
+                {formSubmitted && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute inset-0 bg-[#1b0d09]/95 flex flex-col items-center justify-center text-center p-8 rounded-3xl"
+                  >
+                    <Award className="w-12 h-12 text-ochre mb-3" />
+                    <h4 className="font-serif text-xl text-amberwood-100 font-light">Transmission Received</h4>
+                    <p className="text-xs text-amberwood-300 max-w-sm mt-2 leading-relaxed">
+                      Thank you for reaching out! I will review your message and respond as soon as possible.
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t border-amberwood-900/30 bg-[#1b0d09]/60 py-10 text-center text-xs text-amberwood-400 no-print">
+        <div className="max-w-7xl mx-auto px-4 space-y-4">
+          <p className="font-serif text-lg text-amberwood-200 italic font-light">Maison</p>
+          <p className="font-sans font-light tracking-wide">
+            © {new Date().getFullYear()} Jane Marie Baluna. Curated with technical discipline and creative pride.
+          </p>
+          <p className="text-[10px] text-amberwood-500 uppercase tracking-widest font-mono">
+            SISTERS OF MARY SCHOOL • GRADE 12 COMPUTER PROGRAMMING & MECHATRONICS
+          </p>
+        </div>
+      </footer>
+
+      {/* Project details Modal */}
+      <AnimatePresence>
+        {selectedProject && (
+          <ProjectModal
+            project={selectedProject}
+            onClose={() => setSelectedProject(null)}
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
