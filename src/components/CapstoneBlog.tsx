@@ -262,7 +262,7 @@ ${statsPending > 0
             <div className="w-1.5 h-1.5 rounded-full bg-amberwood-800 hidden sm:block" />
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-ochre" />
-              <span>Timeline: <strong className="text-parchment font-medium">Jan - Mar 2026</strong></span>
+              <span>Timeline: <strong className="text-parchment font-medium">July 2026</strong></span>
             </div>
             <div className="w-1.5 h-1.5 rounded-full bg-amberwood-800 hidden sm:block" />
             <div className="flex items-center gap-2">

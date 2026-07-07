@@ -37,47 +37,6 @@ lblBinaryResult.Text = binary;
 lblOnesCountResult.Text = countOfOnes.ToString();`
   },
   {
-    id: "html-calculator",
-    num: 2,
-    title: "HTML/CSS/JS Calculator",
-    icon: "🖩",
-    category: "Web Development",
-    // Use the newly generated aesthetic image!
-    image: "/src/assets/images/aesthetic_calculator_preview_1783126669381.jpg",
-    desc: "A fully functional browser-based calculator built from scratch using only HTML, CSS, and JavaScript. It features an interactive layout with custom keyboard support and responsive grid sizing.",
-    details: [
-      "Structured the calculator layout using a CSS Grid with an elegant 4-column layout for modern proportions",
-      "Styled with an immersive dark earth palette matching the Maison visual look, featuring tactile, elegant button feedback",
-      "Implemented all calculation logic in JavaScript with dynamic equation building and responsive error handling (like zero-division protection)",
-      "Designed keyboard event listeners so that users can type numbers and operators directly on their physical keyboard",
-      "Created an interactive live calculator module inside this portfolio so readers can try it out immediately!"
-    ],
-    tools: ["HTML5", "CSS3 Grid & Variables", "JavaScript (ES6+)", "Dynamic DOM"],
-    outcome: "An incredibly responsive web calculator with custom themes and tactile animation response. Now embedded as a live interactive widget inside the project modal!",
-    hasInteractiveCalculator: true,
-    codeSnippet: `// Tactile button event binding and math execution
-const buttons = document.querySelectorAll('.calc-btn');
-const screen = document.querySelector('.screen');
-
-buttons.forEach(button => {
-  button.addEventListener('click', () => {
-    const value = button.getAttribute('data-val');
-    if (value === 'C') {
-      equation = '';
-    } else if (value === '=') {
-      try {
-        equation = eval(equation).toString();
-      } catch (err) {
-        equation = 'Error';
-      }
-    } else {
-      equation += value;
-    }
-    screen.value = equation;
-  });
-});`
-  },
-  {
     id: "grade-checker",
     num: 3,
     title: "Grade Checker",
@@ -660,7 +619,7 @@ export const contactInfo = {
   email: "Baluna.Jane@biga.onesms.edu.ph",
   phone: "09556849784",
   location: "Biga II Silang Cavite",
-  school: "Sisters of Mary of Banneus Inc.",
+  school: "Sisters of Mary School of Banneux, Inc.",
   track: "Technical-Vocational-Livelihood (TVL)",
   major: "Computer Programming & Mechatronics",
   aboutMe: "Motivated Grade 12 student skilled in programming, mechatronics, electronics, web development, automation, electrical wiring, and AutoCAD. Experienced in apps, websites, and technical projects, seeking hands-on On-the-Job Training."
@@ -669,8 +628,8 @@ export const contactInfo = {
 export const education = [
   {
     period: "2021 - 2026",
-    school: "Sisters of Mary of Banneus Inc.",
-    degree: "Sisters of Mary of Banneus Inc.",
+    school: "Sisters of Mary School of Banneux, Inc.",
+    degree: "Sisters of Mary School of Banneux, Inc.",
     major: "With Honors",
     details: [
       "Rigorous technical training combining programming fundamentals (C#, JS, HTML/CSS, SQL) with industrial mechatronics (PLC ladder logic programming, automation, and basic robotics)",

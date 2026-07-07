@@ -23,6 +23,7 @@ import {
   Award,
   Mail,
   MapPin,
+  Phone,
   GraduationCap,
   ArrowRight,
   ArrowUpRight,
@@ -51,39 +52,74 @@ export default function App() {
   const [activeSection, setActiveSection] = useState("home");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: -100, y: -100 });
-  const [glowPos, setGlowPos] = useState({ x: -100, y: -100 });
 
   // Contact form submission state
   const [formSubmitted, setFormFeedback] = useState(false);
 
-  // Custom Cursor tracking
+  const cursorDotRef = useRef<HTMLDivElement>(null);
+  const cursorGlowRef = useRef<HTMLDivElement>(null);
+
+  // Custom Cursor tracking & smooth lerp using refs (prevents re-render lag)
   useEffect(() => {
+    const mouse = { x: -100, y: -100 };
+    const dot = { x: -100, y: -100 };
+    const glow = { x: -100, y: -100 };
+
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    };
+
+    // Global listener to detect hover over any interactive elements
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target) return;
+      
+      const isInteractive = 
+        target.closest("a") || 
+        target.closest("button") || 
+        target.closest("input") || 
+        target.closest("textarea") || 
+        target.closest('[role="button"]') ||
+        target.classList.contains("interactive") ||
+        window.getComputedStyle(target).cursor === "pointer";
+
+      setIsHovered(!!isInteractive);
     };
 
     window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
+    window.addEventListener("mouseover", handleMouseOver);
 
-  // Lerp effect for the soft glow custom cursor
-  useEffect(() => {
     let animId: number;
-    const lerp = () => {
-      setGlowPos((prev) => {
-        const dx = mousePos.x - prev.x;
-        const dy = mousePos.y - prev.y;
-        return {
-          x: prev.x + dx * 0.12,
-          y: prev.y + dy * 0.12,
-        };
-      });
-      animId = requestAnimationFrame(lerp);
+    const updateCoords = () => {
+      // Lerp dot (very fast and tactile)
+      dot.x += (mouse.x - dot.x) * 0.25;
+      dot.y += (mouse.y - dot.y) * 0.25;
+
+      // Lerp glow (trailing smoothly behind)
+      glow.x += (mouse.x - glow.x) * 0.12;
+      glow.y += (mouse.y - glow.y) * 0.12;
+
+      if (cursorDotRef.current) {
+        cursorDotRef.current.style.left = `${dot.x}px`;
+        cursorDotRef.current.style.top = `${dot.y}px`;
+      }
+      if (cursorGlowRef.current) {
+        cursorGlowRef.current.style.left = `${glow.x}px`;
+        cursorGlowRef.current.style.top = `${glow.y}px`;
+      }
+
+      animId = requestAnimationFrame(updateCoords);
     };
-    animId = requestAnimationFrame(lerp);
-    return () => cancelAnimationFrame(animId);
-  }, [mousePos]);
+
+    animId = requestAnimationFrame(updateCoords);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseover", handleMouseOver);
+      cancelAnimationFrame(animId);
+    };
+  }, []);
 
   // Section visibility tracking for Navbar highlight
   useEffect(() => {
@@ -150,24 +186,26 @@ export default function App() {
     <div className="bg-[#180b07] text-[#f3e8da] font-sans antialiased relative selection:bg-amberwood-300 selection:text-amberwood-950 grid-bg min-h-screen">
       {/* Dynamic Cursor Elements */}
       <div
-        className="hidden lg:block fixed pointer-events-none rounded-full z-[10000] -translate-x-1/2 -translate-y-1/2 transition-transform duration-200"
+        ref={cursorDotRef}
+        className="hidden lg:block custom-cursor-dot"
         style={{
-          left: mousePos.x,
-          top: mousePos.y,
-          width: isHovered ? "10px" : "6px",
-          height: isHovered ? "10px" : "6px",
-          backgroundColor: isHovered ? "#f5efe6" : "#c48f65",
+          left: "-100px",
+          top: "-100px",
+          width: isHovered ? "12px" : "6px",
+          height: isHovered ? "12px" : "6px",
+          backgroundColor: isHovered ? "#f3e8da" : "#c48f65",
         }}
       />
       <div
-        className="hidden lg:block fixed pointer-events-none rounded-full z-[9999] -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-out"
+        ref={cursorGlowRef}
+        className="hidden lg:block custom-cursor-glow"
         style={{
-          left: glowPos.x,
-          top: glowPos.y,
-          width: isHovered ? "44px" : "32px",
-          height: isHovered ? "44px" : "32px",
-          border: "1px solid rgba(196, 143, 101, 0.4)",
-          backgroundColor: isHovered ? "rgba(196, 143, 101, 0.15)" : "transparent",
+          left: "-100px",
+          top: "-100px",
+          width: isHovered ? "48px" : "32px",
+          height: isHovered ? "48px" : "32px",
+          border: isHovered ? "1px solid rgba(243, 232, 218, 0.6)" : "1px solid rgba(196, 143, 101, 0.4)",
+          backgroundColor: isHovered ? "rgba(196, 143, 101, 0.12)" : "transparent",
         }}
       />
 
@@ -586,8 +624,8 @@ export default function App() {
         <section id="resume" className="max-w-7xl mx-auto px-6 lg:px-16 scroll-mt-28">
           <div className="text-center space-y-4 mb-20 no-print">
             <span className="text-xs uppercase tracking-[0.3em] text-ochre font-semibold block">Professional Profile</span>
-            <h2 class="font-serif text-3xl md:text-5xl text-[#f3e8da] font-light">My Resume</h2>
-            <div class="w-16 h-[1px] bg-amberwood-600 mx-auto"></div>
+            <h2 className="font-serif text-3xl md:text-5xl text-[#f3e8da] font-light">My Resume</h2>
+            <div className="w-16 h-[1px] bg-amberwood-600 mx-auto"></div>
           </div>
           
           {/* Main content which handles tabs and printing */}
@@ -602,6 +640,7 @@ export default function App() {
               <p className="text-gray-600 uppercase tracking-wider text-xs font-semibold">{contactInfo.title}</p>
               <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
                 <span>📍 {contactInfo.location}</span>
+                <span>📞 {contactInfo.phone}</span>
                 <span>✉️ {contactInfo.email}</span>
                 <span>🎓 {contactInfo.school}</span>
               </div>
@@ -757,6 +796,20 @@ export default function App() {
                       Email Address
                     </span>
                     <span className="text-sm text-amberwood-100 font-light">{contactInfo.email}</span>
+                  </div>
+                </a>
+
+                <a
+                  href={`tel:${contactInfo.phone}`}
+                  className="flex items-center space-x-3.5 p-4 bg-amberwood-950/30 border border-amberwood-900/40 rounded-2xl hover:border-ochre transition-colors cursor-pointer"
+                  {...hoverHandlers}
+                >
+                  <Phone className="w-5 h-5 text-ochre" />
+                  <div>
+                    <span className="text-[10px] text-amberwood-400 font-semibold uppercase tracking-wider block">
+                      Phone Number
+                    </span>
+                    <span className="text-sm text-amberwood-100 font-light">{contactInfo.phone}</span>
                   </div>
                 </a>
 

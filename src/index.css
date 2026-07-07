@@ -252,3 +252,35 @@
   }
 }
 
+/* Custom Cursor styles with selective transitions */
+.custom-cursor-dot {
+  position: fixed;
+  pointer-events: none;
+  border-radius: 50%;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  transition: width 150ms ease-out, height 150ms ease-out, background-color 150ms ease-out;
+  will-change: left, top;
+}
+
+.custom-cursor-glow {
+  position: fixed;
+  pointer-events: none;
+  border-radius: 50%;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 300ms ease-out, height 300ms ease-out, background-color 300ms ease-out, border-color 300ms ease-out, background-color 300ms ease-out;
+  will-change: left, top;
+}
+
+/* Ensure html2pdf export has no borders, shadows, or rounded corners */
+.html2pdf__container #printable-resume-sheet {
+  box-shadow: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+
+
