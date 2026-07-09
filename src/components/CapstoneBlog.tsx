@@ -257,7 +257,7 @@ ${statsPending > 0
           <div className="flex flex-wrap justify-center items-center gap-y-2 gap-x-6 mt-8 pt-6 border-t border-amberwood-900/10 text-xs text-amberwood-300">
             <div className="flex items-center gap-2">
               <User className="w-4 h-4 text-ochre" />
-              <span>By <strong className="text-parchment font-medium">Jane Marie Baluna</strong> & Classmates</span>
+              <span>By <strong className="text-parchment font-medium">Jane Marie Baluna</strong> and Classmates</span>
             </div>
             <div className="w-1.5 h-1.5 rounded-full bg-amberwood-800 hidden sm:block" />
             <div className="flex items-center gap-2">
@@ -293,21 +293,65 @@ ${statsPending > 0
 
             {/* Quick Stats Grid */}
             <div className="md:col-span-4 bg-amberwood-950/40 border border-amberwood-900/30 rounded-2xl p-6 space-y-4 text-left">
-              <h3 className="font-serif text-sm text-ochre tracking-wider uppercase font-semibold border-b border-amberwood-900/20 pb-1.5">
+              <h3 className="font-serif text-sm text-ochre tracking-wider uppercase font-semibold border-b border-amberwood-900/20 pb-1.5 flex items-center gap-1.5">
+                <Users className="w-4 h-4 text-ochre" />
                 Project Dossier
               </h3>
-              <div className="space-y-3 text-xs">
+              <div className="space-y-4 text-xs">
+                {/* Team Members List */}
                 <div>
-                  <span className="text-amberwood-400 block uppercase tracking-wider text-[9px]">My Role</span>
-                  <span className="text-parchment font-medium mt-0.5 block">Lead Developer & UI Designer</span>
+                  <span className="text-amberwood-400 block uppercase tracking-wider text-[9px] mb-2">Development Team</span>
+                  <div className="space-y-2">
+                    {/* Jane */}
+                    <div className="flex items-center gap-2 bg-[#2c1710] border border-ochre/25 rounded-lg p-1.5 hover:bg-[#341b12] transition-colors">
+                      <div className="w-6 h-6 rounded-full bg-ochre/20 border border-ochre text-ochre flex items-center justify-center font-serif text-[10px] font-bold">
+                        JB
+                      </div>
+                      <div>
+                        <div className="text-[11px] font-semibold text-parchment">Jane Marie Baluna</div>
+                        <div className="text-[9px] text-ochre font-mono">Lead Dev & UI Designer</div>
+                      </div>
+                    </div>
+                    {/* Janice */}
+                    <div className="flex items-center gap-2 bg-[#2c1710]/40 border border-amberwood-900/20 rounded-lg p-1.5 hover:bg-[#341b12]/40 transition-colors">
+                      <div className="w-6 h-6 rounded-full bg-amberwood-950/40 border border-amberwood-600/30 text-amberwood-300 flex items-center justify-center font-serif text-[10px] font-bold">
+                        JO
+                      </div>
+                      <div>
+                        <div className="text-[11px] font-medium text-amberwood-100">Janice Olitoquit</div>
+                        <div className="text-[9px] text-amberwood-400 font-mono">Lead Researcher</div>
+                      </div>
+                    </div>
+                    {/* Arin */}
+                    <div className="flex items-center gap-2 bg-[#2c1710]/40 border border-amberwood-900/20 rounded-lg p-1.5 hover:bg-[#341b12]/40 transition-colors">
+                      <div className="w-6 h-6 rounded-full bg-amberwood-950/40 border border-amberwood-600/30 text-amberwood-300 flex items-center justify-center font-serif text-[10px] font-bold">
+                        AA
+                      </div>
+                      <div>
+                        <div className="text-[11px] font-medium text-amberwood-100">Arin Aquino</div>
+                        <div className="text-[9px] text-amberwood-400 font-mono">Systems Analyst</div>
+                      </div>
+                    </div>
+                    {/* Geraldine */}
+                    <div className="flex items-center gap-2 bg-[#2c1710]/40 border border-amberwood-900/20 rounded-lg p-1.5 hover:bg-[#341b12]/40 transition-colors">
+                      <div className="w-6 h-6 rounded-full bg-amberwood-950/40 border border-amberwood-600/30 text-amberwood-300 flex items-center justify-center font-serif text-[10px] font-bold">
+                        GG
+                      </div>
+                      <div>
+                        <div className="text-[11px] font-medium text-amberwood-100">Geraldine Galarosa</div>
+                        <div className="text-[9px] text-amberwood-400 font-mono">Technical Writer</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div>
+
+                <div className="border-t border-amberwood-900/20 pt-3">
                   <span className="text-amberwood-400 block uppercase tracking-wider text-[9px]">Class Collaborators</span>
                   <span className="text-parchment font-medium mt-0.5 block">Grade 12 Computer Programming Group</span>
                 </div>
                 <div>
                   <span className="text-amberwood-400 block uppercase tracking-wider text-[9px]">Platform Stack</span>
-                  <span className="text-parchment font-medium mt-0.5 block">React, Tailwind CSS, Local Storage, Gemini API</span>
+                  <span className="text-parchment font-medium mt-0.5 block font-mono text-[10px]">React, Tailwind CSS, Local Storage, Gemini API</span>
                 </div>
                 <div>
                   <span className="text-amberwood-400 block uppercase tracking-wider text-[9px]">Prototype Scope</span>
@@ -421,7 +465,7 @@ ${statsPending > 0
                 Launch Interactive Emulator Below
               </a>
               <a
-                href="https://6a48ab673942a75d6d90241a--examtrack1.netlify.app/"
+                href="https://examtrack1.netlify.app/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-transparent border-2 border-ochre text-ochre text-xs uppercase tracking-widest font-bold rounded-full hover:bg-ochre hover:text-stone-950 transition-all duration-300 shadow-lg hover:scale-105"
@@ -980,6 +1024,75 @@ ${statsPending > 0
                 <h4 className="font-serif text-sm font-semibold text-parchment">Operational Flow</h4>
                 <p className="text-xs text-amberwood-300 leading-relaxed font-light">
                   Enforces systematic academic accountability. Smooths out grading bottlenecks, ensures zero missed exams are overlooked, and improves communication between staff and student bodies.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 4.5: The Development & Research Team */}
+          <div className="space-y-6 text-left">
+            <h2 className="font-serif text-2xl text-amberwood-100 font-light italic flex items-center gap-2 border-b border-amberwood-900/20 pb-2">
+              <Users className="w-5 h-5 text-ochre" />
+              The Creative Development & Research Team
+            </h2>
+            <p className="text-sm md:text-base text-amberwood-200 leading-relaxed font-light">
+              ExamTrack was made possible through the dedicated synergy, collective research, and hard work of our Grade 12 Computer Programming capstone team:
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+              {/* Jane Marie Baluna */}
+              <div className="bg-[#24130d] border border-ochre/35 rounded-2xl p-5 text-center space-y-3 transition-all duration-300 hover:border-ochre hover:shadow-lg hover:scale-[1.02] group">
+                <div className="w-16 h-16 rounded-full bg-ochre/15 border border-ochre flex items-center justify-center text-ochre font-serif text-xl font-bold mx-auto group-hover:bg-ochre group-hover:text-stone-950 transition-all duration-300 shadow-md">
+                  JB
+                </div>
+                <div>
+                  <h4 className="font-serif text-base font-semibold text-parchment">Jane Marie Baluna</h4>
+                  <p className="text-[10px] text-ochre tracking-widest uppercase font-bold mt-1 font-mono">Lead Developer & UI</p>
+                </div>
+                <p className="text-[11px] text-amberwood-300 font-light leading-relaxed">
+                  Architected the interactive prototype, UI layout, local state manager, and integrated server-side Gemini API assistance.
+                </p>
+              </div>
+
+              {/* Janice Olitoquit */}
+              <div className="bg-stone-950/40 border border-amberwood-900/20 rounded-2xl p-5 text-center space-y-3 transition-all duration-300 hover:border-amberwood-600/40 hover:shadow-lg hover:scale-[1.02] group">
+                <div className="w-16 h-16 rounded-full bg-amberwood-950/40 border border-amberwood-600/40 flex items-center justify-center text-amberwood-300 font-serif text-xl font-bold mx-auto group-hover:bg-amberwood-600/20 group-hover:text-parchment transition-all duration-300">
+                  JO
+                </div>
+                <div>
+                  <h4 className="font-serif text-base font-semibold text-amberwood-100">Janice Olitoquit</h4>
+                  <p className="text-[10px] text-amberwood-400 tracking-widest uppercase font-bold mt-1 font-mono">Lead Researcher</p>
+                </div>
+                <p className="text-[11px] text-amberwood-300 font-light leading-relaxed">
+                  Conducted on-site surveys, gathered critical faculty feedback, and structured core institutional requirement parameters.
+                </p>
+              </div>
+
+              {/* Arin Aquino */}
+              <div className="bg-stone-950/40 border border-amberwood-900/20 rounded-2xl p-5 text-center space-y-3 transition-all duration-300 hover:border-amberwood-600/40 hover:shadow-lg hover:scale-[1.02] group">
+                <div className="w-16 h-16 rounded-full bg-amberwood-950/40 border border-amberwood-600/40 flex items-center justify-center text-amberwood-300 font-serif text-xl font-bold mx-auto group-hover:bg-amberwood-600/20 group-hover:text-parchment transition-all duration-300">
+                  AA
+                </div>
+                <div>
+                  <h4 className="font-serif text-base font-semibold text-amberwood-100">Arin Aquino</h4>
+                  <p className="text-[10px] text-amberwood-400 tracking-widest uppercase font-bold mt-1 font-mono">Systems Analyst</p>
+                </div>
+                <p className="text-[11px] text-amberwood-300 font-light leading-relaxed">
+                  Designed operational test flows, validated mock database variables, and certified user experience workflows.
+                </p>
+              </div>
+
+              {/* Geraldine Galarosa */}
+              <div className="bg-stone-950/40 border border-amberwood-900/20 rounded-2xl p-5 text-center space-y-3 transition-all duration-300 hover:border-amberwood-600/40 hover:shadow-lg hover:scale-[1.02] group">
+                <div className="w-16 h-16 rounded-full bg-amberwood-950/40 border border-amberwood-600/40 flex items-center justify-center text-amberwood-300 font-serif text-xl font-bold mx-auto group-hover:bg-amberwood-600/20 group-hover:text-parchment transition-all duration-300">
+                  GG
+                </div>
+                <div>
+                  <h4 className="font-serif text-base font-semibold text-amberwood-100">Geraldine Galarosa</h4>
+                  <p className="text-[10px] text-amberwood-400 tracking-widest uppercase font-bold mt-1 font-mono">Technical Writer</p>
+                </div>
+                <p className="text-[11px] text-amberwood-300 font-light leading-relaxed">
+                  Compiled project presentations, managed documentation briefs, and prepared advisor feedback summary guidelines.
                 </p>
               </div>
             </div>

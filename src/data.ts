@@ -122,13 +122,13 @@ Console.WriteLine("The largest number is " + largest);`
     icon: "🗄️",
     category: "C# + SQL",
     image: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&w=800",
-    desc: "A multi-form Windows desktop application built in C# with SQL Server integration. It includes a Sign Up form, Login form, and a Data Table view — demonstrating real-world database connectivity and user authentication logic.",
+    desc: "A multi-form Windows desktop application built in C# with SQL Server integration, featuring authentication and table views. I spearheaded this project while actively guiding and supporting my classmates with their implementations.",
     details: [
       "Designed three interconnected Windows Forms: Sign Up, Login, and a Data Table display",
       "Connected the application to a local SQL Server database using SqlConnection and SqlCommand",
       "Implemented sign-up validation — checks for empty fields and duplicate usernames before inserting records",
       "Built a login form that verifies credentials against the database and navigates to the main form on success",
-      "Displayed stored user data in a DataGridView table for easy management and viewing"
+      "Actively mentored and assisted classmates in establishing their SQL connection strings and form workflows"
     ],
     tools: ["C#", "Visual Studio", "SQL Server", "Windows Forms", ".NET Framework"],
     outcome: "A fully functional multi-form desktop app with real database-backed sign up, login, and data display. Demonstrates C# event-driven programming, SQL integration, and form navigation.",
@@ -329,8 +329,9 @@ ul.menu-list li:hover {
     icon: "🚦",
     category: "Mechatronics / Automation",
     image: "https://images.unsplash.com/photo-1566008885218-90abf9200ddb?auto=format&fit=crop&w=800",
-    desc: "A PLC-based traffic light control system designed using ladder logic programming to simulate real-world traffic signal operations.",
+    desc: "A PLC-based traffic light control system designed using ladder logic programming. I pioneered this project as the very first student in class to successfully construct and execute a functional ladder logic design.",
     details: [
+      "Pioneered as the first student in class to successfully construct and simulate the ladder diagram sequence",
       "Designed a ladder logic diagram to control traffic light sequences (red, yellow, green)",
       "Programmed timing control for each signal phase using PLC concepts",
       "Simulated real-world traffic conditions using automation logic",
@@ -437,7 +438,7 @@ const getMoodMessage = (mood: string): string => {
     ],
     tools: ["HTML5", "CSS3 Custom Properties", "JavaScript (ES6+)", "Netlify Deployment", "Responsive Layouts"],
     outcome: "An empowering educational tool that streamlines test preparation, enhances time management, and assists students in maintaining academic excellence. Accessible live at examtrack1.netlify.app.",
-    liveUrl: "https://6a48ab673942a75d6d90241a--examtrack1.netlify.app/",
+    liveUrl: "https://examtrack1.netlify.app/",
     codeSnippet: `// Dynamic Target Grade calculation function
 function calculateRequiredScore(currentGrade, weight, targetGrade) {
   // weight is represented as a decimal (e.g. 0.40 for 40%)
@@ -518,7 +519,7 @@ export const achievements: Achievement[] = [
     num: 7,
     tag: "NOVEMBER 2025",
     title: "Data Management Form",
-    desc: "Built a data management form application with login, sign-up, and data table views using C# and SQL."
+    desc: "Built a C# and SQL database form application, serving as a pioneer and helping other classmates design and troubleshoot their projects."
   },
   {
     num: 8,
@@ -536,7 +537,19 @@ export const achievements: Achievement[] = [
     num: 10,
     tag: "JUNE 2026",
     title: "Ladder Diagram Projects",
-    desc: "Designed a traffic light control system using PLC ladder logic to simulate automated traffic signal operations."
+    desc: "Pioneered as the very first student in class to successfully create and execute a functional PLC ladder logic diagram sequence."
+  },
+  {
+    num: 11,
+    tag: "SPORTS EXCELLENCE",
+    title: "Champion in Volleyball",
+    desc: "Achieved Championship status in volleyball tournaments, exhibiting stellar teamwork, athletic coordination, strategic play, and active collaboration."
+  },
+  {
+    num: 12,
+    tag: "ACADEMIC COMPETITION",
+    title: "Science Quiz Bee Champion",
+    desc: "Emerged as the 1st Place Champion in a comprehensive, school-wide whole-batch Science Quiz Bee competition, demonstrating advanced scientific reasoning and rapid analytical recall."
   }
 ];
 
@@ -615,11 +628,11 @@ export const hobbies: Hobby[] = [
 
 export const contactInfo = {
   name: "Jane Marie Baluna",
-  title: "Grade 12 Student",
-  email: "Baluna.Jane@biga.onesms.edu.ph",
+  title: "GRADE 12 STUDENTS",
+  email: "janemariebaluna239@gmail.com",
   phone: "09556849784",
   location: "Biga II Silang Cavite",
-  school: "Sisters of Mary School of Banneux, Inc.",
+  school: "Sisters of Mary of Banneus Inc.",
   track: "Technical-Vocational-Livelihood (TVL)",
   major: "Computer Programming & Mechatronics",
   aboutMe: "Motivated Grade 12 student skilled in programming, mechatronics, electronics, web development, automation, electrical wiring, and AutoCAD. Experienced in apps, websites, and technical projects, seeking hands-on On-the-Job Training."
@@ -628,8 +641,8 @@ export const contactInfo = {
 export const education = [
   {
     period: "2021 - 2026",
-    school: "Sisters of Mary School of Banneux, Inc.",
-    degree: "Sisters of Mary School of Banneux, Inc.",
+    school: "Sisters of Mary of Banneus Inc.",
+    degree: "Sisters of Mary of Banneus Inc.",
     major: "With Honors",
     details: [
       "Rigorous technical training combining programming fundamentals (C#, JS, HTML/CSS, SQL) with industrial mechatronics (PLC ladder logic programming, automation, and basic robotics)",
@@ -639,8 +652,8 @@ export const education = [
   },
   {
     period: "2012 - 2019",
-    school: "Bua Elementary School",
-    degree: "Bua Elementary School",
+    school: "Bua ElementarySchool",
+    degree: "Bua ElementarySchool",
     major: "With Honors",
     details: [
       "Consistently recognized with honors, building strong foundations in mathematics, logic, and core science modules",
@@ -651,12 +664,12 @@ export const education = [
 
 export const experienceCertifications = [
   {
-    title: "Computer Programming NC3",
-    details: "Developed apps (Calculator, Student Management, Food Kiosk) and websites using C#, SQL, HTML, CSS, and JavaScript, focusing on functionality, responsiveness, and user experience."
+    title: "ComputerProgramming NC3",
+    details: "Developedapps (Calculator,Student Management, Food Kiosk) and websites using C#, SQL, HTML, CSS, and JavaScript, focusing on functionality, responsiveness, and user experience."
   },
   {
     title: "Mechatronics NC2",
-    details: "Designed ladder diagrams, wired PLCs, and assembled electro-pneumatic systems under 3 minutes, enhancing technical skills and confidence in industrial automation."
+    details: "Designed ladderdiagrams, wired PLCs, and assembled electro-pneumatic systems under 3 minutes, enhancing technical skills and confidence in industrial automation."
   },
   {
     title: "EPA NC2",

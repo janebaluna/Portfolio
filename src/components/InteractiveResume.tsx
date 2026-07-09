@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   MapPin,
@@ -21,7 +21,12 @@ import {
   ArrowRight,
   Printer,
   Info,
-  Download
+  Download,
+  Copy,
+  Check,
+  Eye,
+  X,
+  Upload
 } from "lucide-react";
 // @ts-ignore
 import html2pdf from "html2pdf.js";
@@ -60,167 +65,43 @@ export default function InteractiveResume() {
   const [hoveredExp, setHoveredExp] = useState<number | null>(null);
   const [showPrintTip, setShowPrintTip] = useState(true);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+  const [isOpenA4Modal, setIsOpenA4Modal] = useState(false);
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText("file:///C:/Users/pco405/Downloads/Baluna,Jane%20Marie%20T..pdf.pdf.pdf");
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2000);
+  };
 
   const handlePrint = () => {
     window.print();
   };
 
   const handleDownloadPDF = () => {
-    const element = document.getElementById("printable-resume-sheet");
-    if (!element) return;
-
     setIsDownloading(true);
-
-    const originalGetComputedStyle = window.getComputedStyle;
-
-    const sanitizeColor = (val: string): string => {
-      return val.replace(/(oklch|oklab|lch|lab)\(([^)]+)\)/gi, (match, type, p1) => {
-        const parts = p1.trim().split(/[\s,]+/);
-        if (parts.length > 0) {
-          const lightnessStr = parts[0];
-          let l = 0.5;
-          if (lightnessStr.endsWith('%')) {
-            l = parseFloat(lightnessStr) / 100;
-          } else {
-            const num = parseFloat(lightnessStr);
-            const isOkl = type.toLowerCase().startsWith('ok');
-            if (isOkl) {
-              l = num; // oklch/oklab lightness is 0..1
-            } else {
-              l = num / 100; // lab/lch lightness is 0..100
-            }
-          }
-          
-          l = Math.max(0, Math.min(1, l));
-          const rgbVal = Math.round(l * 255);
-          return `rgb(${rgbVal}, ${rgbVal}, ${rgbVal})`;
-        }
-        return 'rgb(150, 150, 150)';
-      });
-    };
-
-    // Override window.getComputedStyle to intercept oklch/oklab/lch/lab colors on the fly
-    window.getComputedStyle = function(el, pseudoElt) {
-      const style = originalGetComputedStyle.call(this, el, pseudoElt);
-      return new Proxy(style, {
-        get(target, prop) {
-          if (prop === 'getPropertyValue') {
-            return function(propertyName: string) {
-              const value = target.getPropertyValue(propertyName);
-              if (typeof value === 'string' && (value.includes('oklch') || value.includes('oklab') || value.includes('lab') || value.includes('lch'))) {
-                return sanitizeColor(value);
-              }
-              return value;
-            };
-          }
-          const value = target[prop as keyof CSSStyleDeclaration];
-          if (typeof value === 'string' && (value.includes('oklch') || value.includes('oklab') || value.includes('lab') || value.includes('lch'))) {
-            return sanitizeColor(value);
-          }
-          if (typeof value === 'function') {
-            return (value as Function).bind(target);
-          }
-          return value;
-        }
-      });
-    };
-
+    const element = document.getElementById("printable-resume-sheet");
+    if (!element) {
+      setIsDownloading(false);
+      return;
+    }
     const opt = {
       margin: 0,
-      filename: "Jane_Marie_Baluna_Resume.pdf",
-      image: { type: "jpeg" as const, quality: 1.0 },
-      html2canvas: {
-        scale: 2.5,
-        useCORS: true,
-        letterRendering: true,
-        logging: false,
-        backgroundColor: "#FFFFFF",
-        onclone: (clonedDoc: Document) => {
-          try {
-            // Gather all CSS rules from cloned sheets
-            let combinedCss = "";
-            const sheets = Array.from(clonedDoc.styleSheets);
-            for (const sheet of sheets) {
-              try {
-                const rules = sheet.cssRules || sheet.rules;
-                if (rules) {
-                  for (let i = 0; i < rules.length; i++) {
-                    combinedCss += rules[i].cssText + "\n";
-                  }
-                }
-              } catch (e) {
-                // Ignore cross-origin sheets errors
-              }
-            }
-
-            // Also search all inline style tags
-            const styleTags = clonedDoc.querySelectorAll("style");
-            styleTags.forEach((tag) => {
-              combinedCss += tag.innerHTML + "\n";
-            });
-
-            // Replace all oklch, oklab, lch, lab occurrences with safe fallsbacks
-            const sanitizedCss = sanitizeColor(combinedCss);
-
-            // Disable/remove all existing style elements in the cloned document
-            const styleElements = clonedDoc.querySelectorAll("style, link[rel='stylesheet']");
-            styleElements.forEach((el) => {
-              if (el.parentNode) {
-                el.parentNode.removeChild(el);
-              }
-            });
-
-            // Create a single sanitized style element in clonedDoc
-            const tempStyle = clonedDoc.createElement("style");
-            tempStyle.innerHTML = sanitizedCss;
-            clonedDoc.head.appendChild(tempStyle);
-
-            // Also replace in any inline style attributes on elements
-            const allElements = clonedDoc.querySelectorAll("*");
-            allElements.forEach((el) => {
-              const htmlEl = el as HTMLElement;
-              if (htmlEl.style) {
-                const styleAttr = htmlEl.getAttribute("style");
-                if (styleAttr && (styleAttr.includes("oklch") || styleAttr.includes("oklab") || styleAttr.includes("lab") || styleAttr.includes("lch"))) {
-                  htmlEl.setAttribute("style", sanitizeColor(styleAttr));
-                }
-              }
-            });
-
-            console.log("clonedDoc stylesheets sanitized successfully");
-          } catch (err) {
-            console.error("Failed to sanitize oklch/oklab in cloned document", err);
-          }
-        }
-      },
+      filename: "Baluna,Jane Marie T..pdf",
+      image: { type: "jpeg" as const, quality: 0.98 },
+      html2canvas: { scale: 2.5, useCORS: true, letterRendering: true },
       jsPDF: { unit: "mm" as const, format: "a4" as const, orientation: "portrait" as const }
     };
-
-    let failsafeTimeout: any;
-
-    const cleanup = () => {
-      if (failsafeTimeout) {
-        clearTimeout(failsafeTimeout);
-      }
-      window.getComputedStyle = originalGetComputedStyle;
-      setIsDownloading(false);
-    };
-
-    failsafeTimeout = setTimeout(() => {
-      console.warn("PDF generation timed out, running cleanup failsafe");
-      cleanup();
-    }, 15000);
-
     html2pdf()
       .from(element)
       .set(opt)
       .save()
       .then(() => {
-        cleanup();
+        setIsDownloading(false);
       })
       .catch((err: any) => {
-        console.error("PDF generation failed:", err);
-        cleanup();
+        console.error("PDF generation error:", err);
+        setIsDownloading(false);
       });
   };
 
@@ -254,6 +135,210 @@ export default function InteractiveResume() {
     return [];
   };
 
+  const renderA4ResumeContent = () => {
+    return (
+      <div className="grid grid-cols-12 h-full items-stretch select-text text-left bg-white" style={{ minHeight: "1123px" }}>
+        {/* Left Column (33.33% width) - Dark Navy blue color from the user's PDF */}
+        <div className="col-span-4 bg-[#0F172A] text-[#F8FAFC] p-5 flex flex-col justify-start select-text space-y-5">
+          {/* Portrait circular photo */}
+          <div className="flex justify-center mt-3">
+            <div className="w-28 h-28 rounded-full overflow-hidden border-2 border-white/90 p-0.5 shadow-lg bg-[#0F172A] transition-transform duration-300 hover:scale-105 cursor-pointer">
+              <img
+                src="https://res.cloudinary.com/dkzomhqe0/image/upload/v1782302221/ChatGPT_Image_Feb_14_2026_02_39_40_PM_pdy1po.png"
+                alt={contactInfo.name}
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover rounded-full transition-transform duration-500 hover:scale-115"
+              />
+            </div>
+          </div>
+
+          {/* Name and title */}
+          <div className="text-center">
+            <h1 className="text-lg font-bold tracking-wider uppercase text-white font-sans text-center leading-snug">
+              JANE MARIE
+            </h1>
+            <h1 className="text-lg font-bold tracking-wider uppercase text-white font-sans text-center leading-snug">
+              BALUNA
+            </h1>
+            <h2 className="text-[9px] tracking-widest font-semibold text-slate-300 font-sans mt-1.5 text-center uppercase">
+              GRADE 12 STUDENTS
+            </h2>
+          </div>
+
+          {/* CONTACT section */}
+          <div>
+            <div className="border-b border-white/30 pb-1 mb-2">
+              <h3 className="text-[10px] font-bold tracking-widest uppercase text-white">
+                CONTACT
+              </h3>
+            </div>
+            <div className="space-y-2 text-[10px] text-slate-200">
+              <div className="flex items-start gap-2">
+                <div className="w-5 h-5 bg-white/10 text-white shrink-0 flex items-center justify-center rounded-full">
+                  <MapPin className="w-3 h-3" />
+                </div>
+                <span className="pt-0.5 leading-tight">{contactInfo.location}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-5 h-5 bg-white/10 text-white shrink-0 flex items-center justify-center rounded-full">
+                  <Phone className="w-3 h-3" />
+                </div>
+                <span className="leading-tight">{contactInfo.phone}</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <div className="w-5 h-5 bg-white/10 text-white shrink-0 flex items-center justify-center rounded-full">
+                  <Mail className="w-3 h-3" />
+                </div>
+                <span className="break-all leading-tight pt-0.5">{contactInfo.email}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* SKILLS Section (Soft Skills & Technical Skills) */}
+          <div className="space-y-3.5">
+            <div className="border-b border-white/30 pb-1">
+              <h3 className="text-[10px] font-bold tracking-widest uppercase text-white">
+                SKILLS
+              </h3>
+            </div>
+
+            {/* Soft Skills */}
+            <div>
+              <h4 className="text-[8px] font-bold text-slate-300 tracking-wider uppercase mb-1">
+                SOFT SKILLS
+              </h4>
+              <ul className="space-y-1 text-[10px] text-slate-200 text-left">
+                {pdfSoftSkills.map((skill, i) => (
+                  <li key={i} className="flex items-start gap-1">
+                    <span className="text-white select-none text-[6px] mt-0.5">•</span>
+                    <span className="leading-tight">{skill}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Technical Skills */}
+            <div>
+              <h4 className="text-[8px] font-bold text-slate-300 tracking-wider uppercase mb-1">
+                TECHNICAL SKILLS
+              </h4>
+              <ul className="space-y-1 text-[10px] text-slate-200 text-left">
+                {pdfTechnicalSkills.map((skill, i) => (
+                  <li key={i} className="flex items-start gap-1">
+                    <span className="text-white select-none text-[6px] mt-0.5">•</span>
+                    <span className="leading-tight">{skill}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* LANGUAGES Section */}
+          <div>
+            <div className="border-b border-white/30 pb-1 mb-1.5">
+              <h3 className="text-[10px] font-bold tracking-widest uppercase text-white">
+                LANGUAGE
+              </h3>
+            </div>
+            <div className="space-y-1 text-[10px] text-slate-200 text-left">
+              <div className="flex items-center gap-1.5">
+                <span className="text-white select-none text-[5px]">•</span>
+                <span>Filipino</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="text-white select-none text-[5px]">•</span>
+                <span>English</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column (66.67% width) - White background with exact content timeline */}
+        <div className="col-span-8 bg-white text-[#1E293B] p-6 flex flex-col justify-start select-text space-y-4">
+          {/* ABOUT ME section */}
+          <div>
+            <div className="flex items-center gap-3 mb-1.5">
+              <h2 className="text-xs font-bold tracking-widest uppercase text-[#0F172A] shrink-0">
+                ABOUT ME
+              </h2>
+              <div className="flex-grow border-b-2 border-[#0F172A] mt-1" />
+            </div>
+            <p className="text-[10px] sm:text-[11px] text-[#334155] leading-relaxed font-normal text-left">
+              {contactInfo.aboutMe}
+            </p>
+          </div>
+
+          {/* EXPERIENCE section (Vocational and Certifications) - IN THE MIDDLE */}
+          <div>
+            <div className="flex items-center gap-3 mb-2.5">
+              <h2 className="text-xs font-bold tracking-widest uppercase text-[#0F172A] shrink-0">
+                EXPERIENCE
+              </h2>
+              <div className="flex-grow border-b border-dashed border-gray-400 mt-1" />
+            </div>
+
+            {/* Vertical dashed timeline */}
+            <div className="relative pl-5 border-l border-dashed border-gray-300 space-y-2.5">
+              {experienceCertifications.map((exp, idx) => (
+                <div key={idx} className="relative">
+                  {/* Circle bullet representation with dark center */}
+                  <div className="absolute -left-[27.5px] top-0.5 w-3.5 h-3.5 rounded-full bg-white border border-[#0F172A] flex items-center justify-center z-10 shadow-sm">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#0F172A]" />
+                  </div>
+
+                  <h4 className="text-[11px] font-bold text-[#0F172A] text-left leading-tight">
+                    {exp.title}
+                  </h4>
+                  <ul className="list-none pl-0 mt-0.5 text-[10px] sm:text-[10.5px] text-[#334155] text-left leading-relaxed">
+                    <li className="flex items-start gap-1">
+                      <span className="text-[#334155] mt-0.5 text-[5px]">•</span>
+                      <span>{exp.details}</span>
+                    </li>
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* EDUCATION section - AT THE BOTTOM */}
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <h2 className="text-xs font-bold tracking-widest uppercase text-[#0F172A] shrink-0">
+                EDUCATION
+              </h2>
+              <div className="flex-grow border-b-2 border-[#0F172A] mt-1" />
+            </div>
+
+            {/* Timeline line */}
+            <div className="relative pl-5 border-l-2 border-[#0F172A] space-y-3">
+              {/* Bua ElementarySchool */}
+              <div className="relative">
+                {/* Square dark bullet */}
+                <div className="absolute -left-[24px] top-1 w-2 h-2 bg-[#0F172A]" />
+                <h4 className="text-[11px] font-bold text-[#0F172A] text-left">
+                  Bua ElementarySchool
+                </h4>
+                <p className="text-[10px] text-[#475569] mt-0.5 font-semibold text-left">With Honors</p>
+                <p className="text-[9.5px] text-[#64748B] font-mono mt-0.5 text-left">2012 - 2019</p>
+              </div>
+
+              {/* Sisters of Mary of Banneus Inc. */}
+              <div className="relative">
+                {/* Square dark bullet */}
+                <div className="absolute -left-[24px] top-1 w-2 h-2 bg-[#0F172A]" />
+                <h4 className="text-[11px] font-bold text-[#0F172A] text-left">
+                  Sisters of Mary of Banneus Inc.
+                </h4>
+                <p className="text-[10px] text-[#475569] mt-0.5 font-semibold text-left">With Honors</p>
+                <p className="text-[9.5px] text-[#64748B] font-mono mt-0.5 text-left">2021 - 2026</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="w-full max-w-5xl mx-auto px-4 sm:px-6">
       
@@ -270,40 +355,28 @@ export default function InteractiveResume() {
         </div>
 
         <div className="flex flex-wrap justify-center items-center gap-3">
-          {/* View Toggles */}
-          <div className="flex space-x-1.5 bg-amberwood-950/60 p-1 rounded-full border border-amberwood-900/30">
-            <button
-              onClick={() => setActiveTab("interactive")}
-              className={`px-4 sm:px-5 py-2 rounded-full text-xs uppercase tracking-widest font-semibold transition-all duration-300 ${
-                activeTab === "interactive"
-                  ? "bg-ochre text-stone-950 shadow-md scale-105"
-                  : "text-amberwood-300 hover:text-parchment hover:bg-amberwood-900/20"
-              }`}
-            >
-              Interactive Showcase
-            </button>
-            <button
-              onClick={() => setActiveTab("printable")}
-              className={`px-4 sm:px-5 py-2 rounded-full text-xs uppercase tracking-widest font-semibold transition-all duration-300 ${
-                activeTab === "printable"
-                  ? "bg-ochre text-stone-950 shadow-md scale-105"
-                  : "text-amberwood-300 hover:text-parchment hover:bg-amberwood-900/20"
-              }`}
-            >
-              Clean / PDF View
-            </button>
-          </div>
-
           <div className="flex items-center gap-2">
-            {/* Action Download Button */}
-            <button
-              onClick={handleDownloadPDF}
-              disabled={isDownloading}
-              className="flex items-center gap-2 px-5 py-2.5 bg-[#834626] text-parchment text-xs uppercase tracking-widest font-bold rounded-full hover:bg-ochre hover:text-stone-950 transition-all duration-300 shadow-md border border-ochre/30 hover:scale-105 shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
+            {/* View A4 PDF Button */}
+            <a
+              href="https://drive.google.com/file/d/1bZ-_QYgWYFu4CIEzoO3a_f84pgh4cw9V/view?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-5 py-2.5 bg-ochre text-stone-950 text-xs uppercase tracking-widest font-bold rounded-full hover:bg-parchment transition-all duration-300 shadow-md hover:scale-105 shrink-0"
             >
-              <Download className="w-3.5 h-3.5 shrink-0 animate-bounce" />
-              {isDownloading ? "Downloading..." : "Download PDF"}
-            </button>
+              <Eye className="w-3.5 h-3.5 shrink-0" />
+              View PDF Resume
+            </a>
+
+            {/* Download PDF Button */}
+            <a
+              href="https://drive.google.com/uc?export=download&id=1bZ-_QYgWYFu4CIEzoO3a_f84pgh4cw9V"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-5 py-2.5 bg-[#834626] text-parchment text-xs uppercase tracking-widest font-bold rounded-full hover:bg-ochre hover:text-stone-950 transition-all duration-300 shadow-md border border-ochre/30 hover:scale-105 shrink-0"
+            >
+              <Download className="w-3.5 h-3.5 shrink-0" />
+              Download PDF
+            </a>
 
             {/* Action Print Button */}
             <button
@@ -319,24 +392,50 @@ export default function InteractiveResume() {
       </div>
 
       {/* Dynamic Printing Helper Banner */}
-      {activeTab === "printable" && showPrintTip && (
+      {showPrintTip && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-amberwood-950/40 border border-ochre/30 rounded-xl p-4 mb-6 flex items-start gap-3 text-left no-print"
+          className="bg-amberwood-950/40 border border-ochre/30 rounded-xl p-5 mb-6 flex flex-col md:flex-row items-start gap-4 text-left no-print"
         >
-          <Info className="w-5 h-5 text-ochre shrink-0 mt-0.5" />
-          <div className="flex-1">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-parchment">
-              Optimized Resume Downloads
-            </h4>
-            <p className="text-xs text-amberwood-300 mt-1 leading-relaxed">
-              We've added a premium <strong>"Download PDF"</strong> feature that exports the resume to your device. Alternatively, click <strong>"Print"</strong> to use the browser print utility. For browser printing, ensure <strong>"Background graphics"</strong> is checked to preserve column backgrounds.
-            </p>
+          <div className="flex items-start gap-3 flex-grow w-full">
+            <Info className="w-5 h-5 text-ochre shrink-0 mt-0.5" />
+            <div className="flex-1 space-y-3 w-full">
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-parchment flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-ochre animate-pulse" />
+                  Your Google Drive Resume is Connected!
+                </h4>
+                <p className="text-xs text-amberwood-300 mt-1 leading-relaxed">
+                  We have connected your Google Drive resume link directly to this portfolio. When you click <strong>"View PDF Resume"</strong> or <strong>"Download PDF"</strong>, you can access your original file on Google Drive (<strong>https://drive.google.com/file/d/1bZ-_QYgWYFu4CIEzoO3a_f84pgh4cw9V/view?usp=sharing</strong>) to view, print, download, or manage it.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-2 pt-1">
+                <a
+                  href="https://drive.google.com/file/d/1bZ-_QYgWYFu4CIEzoO3a_f84pgh4cw9V/view?usp=sharing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 bg-ochre hover:bg-parchment text-stone-950 text-xs font-bold uppercase tracking-wider rounded-lg transition-colors font-sans"
+                >
+                  <Eye className="w-3.5 h-3.5" />
+                  Open in Drive
+                </a>
+                <a
+                  href="https://drive.google.com/uc?export=download&id=1bZ-_QYgWYFu4CIEzoO3a_f84pgh4cw9V"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 bg-[#834626] hover:bg-ochre hover:text-stone-950 text-parchment text-xs font-bold uppercase tracking-wider rounded-lg transition-colors font-sans border border-ochre/20"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  Direct Download
+                </a>
+              </div>
+            </div>
           </div>
           <button
             onClick={() => setShowPrintTip(false)}
-            className="text-amberwood-400 hover:text-parchment text-xs font-mono px-1.5 py-0.5 border border-amberwood-900/30 rounded"
+            className="text-amberwood-400 hover:text-parchment text-xs font-mono px-1.5 py-0.5 border border-amberwood-900/30 rounded self-start md:self-auto"
           >
             ✕
           </button>
@@ -344,15 +443,14 @@ export default function InteractiveResume() {
       )}
 
       <AnimatePresence mode="wait">
-        {activeTab === "interactive" ? (
-          <motion.div
-            key="interactive"
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -15 }}
-            transition={{ duration: 0.4 }}
-            className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch"
-          >
+        <motion.div
+          key="interactive"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -15 }}
+          transition={{ duration: 0.4 }}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch"
+        >
             {/* LEFT COLUMN - Profile, Contacts, Skills */}
             <div className="lg:col-span-4 space-y-6">
               
@@ -581,228 +679,91 @@ export default function InteractiveResume() {
             </div>
 
           </motion.div>
-        ) : (
-          <div className="w-full overflow-x-auto pb-6 flex justify-center">
-            <motion.div
-              key="printable"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.4 }}
-              className="bg-white text-[#1E293B] shadow-2xl border border-gray-300 text-left overflow-hidden select-text shrink-0 rounded-lg"
-              style={{ width: "794px", height: "1123px", boxSizing: "border-box" }}
-              id="printable-resume-sheet"
-            >
-              {/* Split layout mimicking the exact PDF uploaded by the user */}
-              <div className="grid grid-cols-12 h-full items-stretch">
-                
-                {/* Left Column (33.33% width) - Dark Navy blue color from the user's PDF */}
-                <div className="col-span-4 bg-[#0F172A] text-[#F8FAFC] p-8 flex flex-col justify-between select-text">
-                  <div>
-                    
-                    {/* Portrait circular photo */}
-                    <div className="flex justify-center mb-6">
-                      <div className="w-36 h-36 rounded-full overflow-hidden border-2 border-white/90 p-0.5 shadow-lg bg-slate-800">
-                        <img
-                          src="https://res.cloudinary.com/dkzomhqe0/image/upload/v1782302221/ChatGPT_Image_Feb_14_2026_02_39_40_PM_pdy1po.png"
-                          alt={contactInfo.name}
-                          referrerPolicy="no-referrer"
-                          className="w-full h-full object-cover rounded-full"
-                        />
-                      </div>
-                    </div>
+        </AnimatePresence>
 
-                    {/* Name and title */}
-                    <div className="text-center mb-8">
-                      <h1 className="text-2xl font-bold tracking-wider uppercase text-white font-sans text-center leading-tight">
-                        JANE MARIE
-                      </h1>
-                      <h1 className="text-2xl font-bold tracking-wider uppercase text-white font-sans text-center leading-tight">
-                        BALUNA
-                      </h1>
-                      <p className="text-[10px] tracking-widest text-[#94A3B8] mt-2.5 font-semibold text-center uppercase">
-                        GRADE 12 STUDENT
-                      </p>
-                    </div>
-
-                    {/* CONTACT section */}
-                    <div className="mb-8">
-                      <div className="border-b border-white/20 pb-1.5 mb-3">
-                        <h3 className="text-xs font-bold tracking-widest uppercase text-white">
-                          CONTACT
-                        </h3>
-                      </div>
-                      <div className="space-y-4 text-xs text-[#CBD5E1]">
-                        <div className="flex items-start gap-3">
-                          <div className="w-5 h-5 text-white shrink-0 mt-0.5 flex items-center justify-center bg-white/10 rounded-full p-0.5">
-                            <MapPin className="w-3 h-3" />
-                          </div>
-                          <span className="pt-0.5 leading-relaxed">{contactInfo.location}</span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <div className="w-5 h-5 text-white shrink-0 flex items-center justify-center bg-white/10 rounded-full p-0.5">
-                            <Phone className="w-3 h-3" />
-                          </div>
-                          <span>{contactInfo.phone}</span>
-                        </div>
-                        <div className="flex items-start gap-3">
-                          <div className="w-5 h-5 text-white shrink-0 mt-0.5 flex items-center justify-center bg-white/10 rounded-full p-0.5">
-                            <Mail className="w-3 h-3" />
-                          </div>
-                          <span className="break-all leading-relaxed">{contactInfo.email}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* SKILLS Section (Soft Skills & Technical Skills) */}
-                    <div className="mb-8">
-                      <div className="border-b border-white/20 pb-1.5 mb-3">
-                        <h3 className="text-xs font-bold tracking-widest uppercase text-white">
-                          SKILLS
-                        </h3>
-                      </div>
-                      
-                      {/* Soft Skills */}
-                      <div className="mb-5">
-                        <h4 className="text-[10px] font-bold text-[#E2E8F0] tracking-wider uppercase mb-2">
-                          SOFT SKILLS
-                        </h4>
-                        <ul className="space-y-2 text-xs text-[#CBD5E1] list-disc list-inside text-left">
-                          {pdfSoftSkills.map((skill, i) => (
-                            <li key={i} className="pl-0.5">{skill}</li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      {/* Technical Skills */}
-                      <div>
-                        <h4 className="text-[10px] font-bold text-[#E2E8F0] tracking-wider uppercase mb-2">
-                          TECHNICAL SKILLS
-                        </h4>
-                        <ul className="space-y-2 text-xs text-[#CBD5E1] list-disc list-inside text-left">
-                          {pdfTechnicalSkills.map((skill, i) => (
-                            <li key={i} className="pl-0.5">{skill}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-
-                    {/* LANGUAGES Section */}
-                    <div>
-                      <div className="border-b border-white/20 pb-1.5 mb-3">
-                        <h3 className="text-xs font-bold tracking-widest uppercase text-white">
-                          LANGUAGE
-                        </h3>
-                      </div>
-                      <ul className="space-y-2 text-xs text-[#CBD5E1] list-disc list-inside text-left">
-                        {pdfLanguages.map((lang, idx) => (
-                          <li key={idx} className="pl-0.5">{lang}</li>
-                        ))}
-                      </ul>
-                    </div>
-
-                  </div>
-
-                  {/* Academic Portfolio watermark */}
-                  <div className="text-[9px] text-[#475569] text-center border-t border-white/5 pt-4 mt-8 no-print">
-                    Academic & Technical Portfolio Archive
-                  </div>
-                </div>
-
-                {/* Right Column (66.67% width) - White background with exact content timeline */}
-                <div className="col-span-8 bg-white text-[#1E293B] p-10 flex flex-col justify-between select-text">
-                  <div className="space-y-8">
-                    
-                    {/* ABOUT ME section */}
-                    <div>
-                      <div className="border-b-2 border-[#0F172A] pb-1.5 mb-3">
-                        <h2 className="text-base font-bold tracking-widest uppercase text-[#0F172A] leading-none">
-                          ABOUT ME
-                        </h2>
-                      </div>
-                      <p className="text-xs text-[#334155] leading-relaxed font-normal text-left">
-                        {contactInfo.aboutMe}
-                      </p>
-                    </div>
-
-                    {/* EXPERIENCE section (Vocational and Certifications) - IN THE MIDDLE */}
-                    <div>
-                      <div className="border-b border-dashed border-gray-400 pb-1.5 mb-5">
-                        <h2 className="text-base font-bold tracking-widest uppercase text-[#0F172A] leading-none">
-                          EXPERIENCE
-                        </h2>
-                      </div>
-                      
-                      {/* Vertical dashed timeline */}
-                      <div className="relative pl-8 border-l border-dashed border-gray-300 space-y-7 ml-3">
-                        {experienceCertifications.map((exp, idx) => (
-                          <div key={idx} className="relative">
-                            {/* Circle bullet representation with custom icon */}
-                            <div className="absolute -left-[43px] top-0.5 w-5 h-5 rounded-full bg-white border border-[#0F172A] flex items-center justify-center z-10 shadow-sm">
-                              {getExperienceIconPrint(exp.title)}
-                            </div>
-                            
-                            <h4 className="text-xs font-bold text-[#0F172A] uppercase tracking-wide text-left">
-                              {exp.title}
-                            </h4>
-                            <ul className="list-disc pl-4 mt-1.5 text-xs text-[#334155] text-left leading-relaxed">
-                              <li>{exp.details}</li>
-                            </ul>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* EDUCATION section - AT THE BOTTOM */}
-                    <div>
-                      <div className="border-b-2 border-[#0F172A] pb-1.5 mb-5">
-                        <h2 className="text-base font-bold tracking-widest uppercase text-[#0F172A] leading-none">
-                          EDUCATION
-                        </h2>
-                      </div>
-                      
-                      {/* Timeline line */}
-                      <div className="relative pl-8 border-l-2 border-[#0F172A] space-y-6 ml-3">
-                        
-                        {/* Bua Elementary School */}
-                        <div className="relative">
-                          {/* Square dark bullet */}
-                          <div className="absolute -left-[37px] top-1.5 w-2.5 h-2.5 bg-[#0F172A]" />
-                          <h4 className="text-xs font-bold text-[#0F172A] text-left">
-                            Bua Elementary School
-                          </h4>
-                          <p className="text-xs text-[#475569] mt-0.5 font-semibold text-left">With Honors</p>
-                          <p className="text-[11px] text-[#64748B] font-mono mt-0.5 text-left">2012 - 2019</p>
-                        </div>
-
-                        {/* Sisters of Mary School of Banneux, Inc. */}
-                        <div className="relative">
-                          {/* Square dark bullet */}
-                          <div className="absolute -left-[37px] top-1.5 w-2.5 h-2.5 bg-[#0F172A]" />
-                          <h4 className="text-xs font-bold text-[#0F172A] text-left">
-                            Sisters of Mary School of Banneux, Inc.
-                          </h4>
-                          <p className="text-xs text-[#475569] mt-0.5 font-semibold text-left">With Honors</p>
-                          <p className="text-[11px] text-[#64748B] font-mono mt-0.5 text-left">2021 - 2026</p>
-                        </div>
-
-                      </div>
-                    </div>
-
-                  </div>
-
-                  {/* Print footer */}
-                  <div className="text-[9px] text-[#94A3B8] text-right mt-12 pt-4 border-t border-gray-100 no-print flex justify-between items-center">
-                    <span>Jane Marie Baluna • Technical Portfolio</span>
-                    <span>Generated on A4 paper format</span>
-                  </div>
-                </div>
-
-              </div>
-            </motion.div>
+        {/* Hidden offscreen printable container for PDF generation & printing */}
+        <div className="absolute -left-[9999px] -top-[9999px] opacity-0 pointer-events-none select-none overflow-hidden print:static print:opacity-100 print:pointer-events-auto print:block flex justify-center">
+          <div
+            className="bg-white text-[#1E293B] shadow-2xl border border-gray-300 text-left overflow-hidden select-text shrink-0 rounded-lg"
+            style={{ width: "794px", height: "1123px", boxSizing: "border-box" }}
+            id="printable-resume-sheet"
+          >
+            {renderA4ResumeContent()}
           </div>
-        )}
-      </AnimatePresence>
+        </div>
+
+        {/* Aesthetic A4 PDF Viewer Modal */}
+        <AnimatePresence>
+          {isOpenA4Modal && (
+            <div className="fixed inset-0 z-50 bg-stone-950/90 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto no-print">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                transition={{ type: "spring", damping: 25, stiffness: 350 }}
+                className="bg-stone-900 border border-amberwood-900/30 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[96vh] sm:max-h-[92vh] flex flex-col overflow-hidden"
+              >
+                {/* Modal Header */}
+                <div className="flex justify-between items-center px-4 sm:px-6 py-3 sm:py-4 border-b border-amberwood-900/20 bg-stone-950/50">
+                  <div>
+                    <h3 className="font-serif text-sm sm:text-base text-parchment tracking-wide flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-ochre animate-pulse" />
+                      Jane Marie's Original A4 Resume
+                    </h3>
+                    <p className="text-[10px] sm:text-[11px] text-amberwood-400 font-mono">
+                      High-fidelity layout of your real resume
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setIsOpenA4Modal(false)}
+                    className="p-1.5 text-stone-400 hover:text-parchment hover:bg-white/5 rounded-full transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Modal Body with Zoomable/Scrollable Paper */}
+                <div className="flex-1 overflow-auto bg-stone-950/40 p-3 sm:p-6 flex justify-center items-start min-h-[50vh] max-h-[72vh]">
+                  <div className="scale-[0.52] xs:scale-[0.62] sm:scale-[0.78] md:scale-[0.95] lg:scale-100 origin-top transform-gpu shadow-2xl rounded-lg overflow-hidden border border-stone-800 shrink-0">
+                    <div
+                      id="printable-resume-sheet"
+                      className="bg-white text-[#1E293B] text-left select-text overflow-hidden shrink-0"
+                      style={{ width: "794px", height: "1123px", boxSizing: "border-box" }}
+                    >
+                      {renderA4ResumeContent()}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Modal Footer with Actions */}
+                <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-amberwood-900/20 bg-stone-950/50 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
+                  <div className="flex items-center gap-2 text-[10px] sm:text-xs text-amberwood-400">
+                    <Info className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-ochre" />
+                    <span>Connected directly to your Google Drive • High fidelity & downloadable</span>
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <button
+                      onClick={() => {
+                        handleDownloadPDF();
+                      }}
+                      className="flex items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 bg-[#834626] text-parchment text-[11px] uppercase tracking-widest font-bold rounded-full hover:bg-ochre hover:text-stone-950 transition-all"
+                    >
+                      <Download className="w-3 h-3" />
+                      Download PDF
+                    </button>
+                    <button
+                      onClick={handlePrint}
+                      className="flex items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 bg-stone-800 text-amberwood-200 text-[11px] uppercase tracking-widest font-bold rounded-full hover:bg-stone-700 hover:text-parchment transition-all"
+                    >
+                      <Printer className="w-3 h-3" />
+                      Print
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
     </div>
   );
 }

@@ -27,7 +27,9 @@ import {
   GraduationCap,
   ArrowRight,
   ArrowUpRight,
-  ExternalLink
+  ExternalLink,
+  Trophy,
+  Sparkles
 } from "lucide-react";
 
 import Navbar from "./components/Navbar";
@@ -168,6 +170,38 @@ export default function App() {
     };
     const Comp = map[name];
     return Comp ? <Comp className="w-5 h-5 text-ochre" /> : <Code className="w-5 h-5 text-ochre" />;
+  };
+
+  // Achievement custom icon resolver to match visual aesthetics
+  const getAchievementIcon = (num: number) => {
+    switch (num) {
+      case 1:
+        return <Award className="w-5 h-5 text-ochre" />;
+      case 2:
+        return <Heart className="w-5 h-5 text-rose-400/90" />;
+      case 3:
+        return <Activity className="w-5 h-5 text-amber-400/90" />;
+      case 4:
+        return <GraduationCap className="w-5 h-5 text-emerald-400/90" />;
+      case 5:
+        return <Code className="w-5 h-5 text-sky-400/90" />;
+      case 6:
+        return <Layout className="w-5 h-5 text-orange-400/90" />;
+      case 7:
+        return <Database className="w-5 h-5 text-indigo-400/90" />;
+      case 8:
+        return <Paintbrush className="w-5 h-5 text-purple-400/90" />;
+      case 9:
+        return <Settings className="w-5 h-5 text-teal-400/90" />;
+      case 10:
+        return <Cpu className="w-5 h-5 text-pink-400/90" />;
+      case 11:
+        return <Trophy className="w-5 h-5 text-yellow-400/90 animate-bounce" style={{ animationDuration: '3s' }} />;
+      case 12:
+        return <Sparkles className="w-5 h-5 text-cyan-400/90" />;
+      default:
+        return <Award className="w-5 h-5 text-ochre" />;
+    }
   };
 
   const handleContactSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -449,23 +483,47 @@ export default function App() {
             <div className="w-16 h-[1px] bg-amberwood-600 mx-auto" />
           </div>
 
-          <div className="relative border-l border-amberwood-900/50 ml-4 md:ml-8 max-w-4xl mx-auto space-y-8 text-left">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto text-left">
             {achievements.map((ach) => (
               <div
                 key={ach.num}
                 {...hoverHandlers}
-                className="relative pl-8 md:pl-10 botanical-card p-5 rounded-2xl hover:bg-amberwood-950/20 cursor-pointer"
+                className="bg-[#1b0d09]/40 border border-amberwood-900/40 rounded-2xl p-6 flex flex-col justify-between project-card botanical-card group cursor-pointer transition-all duration-300 hover:border-ochre/50 hover:shadow-[0_10px_30px_rgba(131,70,38,0.15)] relative overflow-hidden"
               >
-                <div className="absolute -left-[21px] top-6 w-3 h-3 rounded-full bg-ochre border-2 border-[#180b07]" />
-                <span className="text-[10px] uppercase tracking-widest text-ochre font-semibold">
-                  {ach.tag}
-                </span>
-                <h3 className="font-serif text-xl text-amberwood-100 font-light italic mt-1">
-                  {ach.num}. {ach.title}
-                </h3>
-                <p className="text-amberwood-300 text-sm font-light mt-2 max-w-3xl leading-relaxed">
-                  {ach.desc}
-                </p>
+                {/* Background glow on hover */}
+                <div className="absolute top-0 right-0 w-24 h-24 bg-ochre/5 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+                <div className="space-y-4">
+                  <div className="flex justify-between items-start">
+                    {/* Icon container with a glowing background ring */}
+                    <div className="w-10 h-10 rounded-xl bg-[#28140e] border border-amberwood-900/40 flex items-center justify-center shadow-inner group-hover:border-ochre/40 transition-colors duration-300">
+                      {getAchievementIcon(ach.num)}
+                    </div>
+                    {/* Big beautiful index number */}
+                    <span className="font-mono text-xs font-bold text-amberwood-700 select-none group-hover:text-ochre transition-colors duration-300">
+                      #{ach.num.toString().padStart(2, "0")}
+                    </span>
+                  </div>
+
+                  <div>
+                    {/* Achievement Tag Badge */}
+                    <span className="inline-block px-2.5 py-0.5 text-[8px] uppercase tracking-widest font-bold text-ochre bg-[#27150e]/80 border border-ochre/20 rounded-full mb-2">
+                      {ach.tag}
+                    </span>
+                    {/* Title with serif italic */}
+                    <h3 className="font-serif text-lg text-amberwood-100 font-light italic leading-tight group-hover:text-parchment transition-colors duration-300">
+                      {ach.title}
+                    </h3>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-amberwood-300 text-xs font-light leading-relaxed">
+                    {ach.desc}
+                  </p>
+                </div>
+
+                {/* Aesthetic accent bottom border */}
+                <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-amberwood-900/10 to-transparent mt-4 group-hover:via-ochre/30 transition-all duration-300" />
               </div>
             ))}
           </div>
@@ -629,88 +687,8 @@ export default function App() {
           </div>
           
           {/* Main content which handles tabs and printing */}
-          <div className="no-print">
+          <div className="w-full">
             <InteractiveResume />
-          </div>
-
-          {/* Printable Layout directly loaded here so it prints perfectly */}
-          <div className="hidden print:block text-black bg-white p-8 font-sans max-w-4xl mx-auto">
-            <div className="border-b-2 border-gray-800 pb-4 mb-6">
-              <h1 className="text-3xl font-bold text-gray-900">{contactInfo.name}</h1>
-              <p className="text-gray-600 uppercase tracking-wider text-xs font-semibold">{contactInfo.title}</p>
-              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
-                <span>📍 {contactInfo.location}</span>
-                <span>📞 {contactInfo.phone}</span>
-                <span>✉️ {contactInfo.email}</span>
-                <span>🎓 {contactInfo.school}</span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-12 gap-8">
-              {/* Left Printable Column */}
-              <div className="col-span-4 space-y-6">
-                <div>
-                  <h3 className="font-bold text-xs uppercase tracking-wider border-b border-gray-300 pb-1 mb-2 text-gray-900">TECHNICAL COMPETENCIES</h3>
-                  <div className="space-y-3">
-                    {technicalCompetencies.map((tech, idx) => (
-                      <div key={idx}>
-                        <h4 className="text-xs font-semibold text-gray-800">{tech.category}</h4>
-                        <p className="text-[10px] text-gray-600">{tech.items.join(", ")}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="font-bold text-xs uppercase tracking-wider border-b border-gray-300 pb-1 mb-2 text-gray-900">SOFT CAPABILITIES</h3>
-                  <div className="space-y-2">
-                    {softCompetencies.map((soft, idx) => (
-                      <div key={idx} className="text-[10px]">
-                        <span className="font-semibold text-gray-800">{soft.name}</span>
-                        <p className="text-gray-600">{soft.desc}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Printable Column */}
-              <div className="col-span-8 space-y-6">
-                <div>
-                  <h3 className="font-bold text-xs uppercase tracking-wider border-b border-gray-300 pb-1 mb-3 text-gray-900">EDUCATION & ACADEMICS</h3>
-                  <div className="space-y-4">
-                    {education.map((edu, idx) => (
-                      <div key={idx} className="space-y-1">
-                        <div className="flex justify-between text-xs font-semibold text-gray-900">
-                          <span>{edu.degree}</span>
-                          <span className="font-mono text-gray-500">{edu.period}</span>
-                        </div>
-                        <p className="text-xs text-amber-900 font-medium">{edu.school}</p>
-                        <ul className="list-disc list-inside text-[10px] text-gray-700 pl-1 space-y-1">
-                          {edu.details.map((detail, dIdx) => (
-                            <li key={dIdx}>{detail}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="font-bold text-xs uppercase tracking-wider border-b border-gray-300 pb-1 mb-3 text-gray-900">TECHNICAL PROJECTS</h3>
-                  <div className="space-y-3">
-                    <div className="text-xs">
-                      <p className="font-semibold text-gray-900">Decimal to Binary Converter & Ones Counter (C#)</p>
-                      <p className="text-[10px] text-gray-600">Built a desktop Windows Forms application supporting real-time bitwise conversion and mathematical counting routines.</p>
-                    </div>
-                    <div className="text-xs">
-                      <p className="font-semibold text-gray-900">Interactive Web Calculator (HTML, CSS Grid, JavaScript)</p>
-                      <p className="text-[10px] text-gray-600">Developed a tactile grid calculator featuring custom styling, division error protection, and dynamic keyboard event bindings.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </section>
 
