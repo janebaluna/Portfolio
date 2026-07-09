@@ -327,7 +327,7 @@ export default function App() {
               >
                 <img
                   src="https://res.cloudinary.com/dkzomhqe0/image/upload/v1782302221/ChatGPT_Image_Feb_14_2026_02_39_40_PM_pdy1po.png?auto=compress&cs=tinysrgb&w=800"
-                  alt="Jane Marie Baluna - Professional Portrait"
+                  alt="Jane Marie Baluna - Homepage Portrait"
                   referrerPolicy="no-referrer"
                   className="aspect-[3/4] object-cover rounded-xl"
                 />
