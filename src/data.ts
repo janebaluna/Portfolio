@@ -157,7 +157,7 @@ using (SqlConnection conn = new SqlConnection(connStr)) {
     title: "Circle Area Calculator",
     icon: "⭕",
     category: "Web Development",
-    image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800",
+    image: "/src/assets/images/aesthetic_calculator_preview_1783126669381.jpg",
     desc: "A JavaScript web page that computes and displays the area of a circle given a fixed radius, demonstrating variable declarations, arithmetic operators, and multiple output methods in JavaScript.",
     details: [
       "Declared variables using let and const for radius, pi, area, message, and a boolean isCircle",
@@ -169,6 +169,7 @@ using (SqlConnection conn = new SqlConnection(connStr)) {
     ],
     tools: ["HTML", "CSS", "JavaScript"],
     outcome: "A working, styled webpage that calculates and displays the area of a circle (radius 7 → area 154). Demonstrates JavaScript variable types, arithmetic operators, and multiple DOM output techniques.",
+    hasInteractiveCalculator: true,
     codeSnippet: `let radius = 7;
 const pi = 3.14;
 let area = pi;
@@ -567,13 +568,13 @@ export const hobbies: Hobby[] = [
   {
     num: 1,
     title: "Building Websites",
-    image: "https://images.stockcake.com/public/0/a/9/0a9ddedd-bbf9-4435-a5f1-cfa95ced0f58_large/nighttime-urban-work-stockcake.jpg",
+    image: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&q=80&w=400",
     alt: "Building websites"
   },
   {
     num: 2,
     title: "Journaling Thoughts",
-    image: "https://i.pinimg.com/736x/87/9c/ed/879ced162bd6ac262f984994a6a3f052.jpg",
+    image: "https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&q=80&w=400",
     alt: "Journaling"
   },
   {
@@ -597,7 +598,7 @@ export const hobbies: Hobby[] = [
   {
     num: 6,
     title: "Reading Books",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuq0A0LlLPnMxQOBG-4s7myZQI-Z1t6IhED8GnBsHjOY1C4DhizZhf4Hm9&s=10",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=400",
     alt: "Reading"
   },
   {
@@ -615,13 +616,13 @@ export const hobbies: Hobby[] = [
   {
     num: 9,
     title: "Nature Walking",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUP7W_zwifVMSHV7rxBhBKoHxALXHX7unY1_FD7LBEYI8Vg2-xq52Ao_yg&s=10",
+    image: "https://images.unsplash.com/photo-1501555088652-021faa106b9b?auto=format&fit=crop&q=80&w=400",
     alt: "Nature"
   },
   {
     num: 10,
     title: "Playing Sports",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRriBZOQBvDU0viSPy3i3ctDKm2dCl7TYyyn7DOKp1M7XzkkX5-MrGi8dg&s=10",
+    image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=80&w=400",
     alt: "Sports"
   }
 ];

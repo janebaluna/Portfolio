@@ -54,6 +54,7 @@ export default function App() {
   const [activeSection, setActiveSection] = useState("home");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [isPortraitHovered, setIsPortraitHovered] = useState(false);
 
   // Contact form submission state
   const [formSubmitted, setFormFeedback] = useState(false);
@@ -323,16 +324,26 @@ export default function App() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="hero-main-img botanical-card"
+                className="hero-main-img botanical-card w-full max-w-[340px] md:max-w-[380px]"
               >
-                <img
-                  src="https://res.cloudinary.com/dkzomhqe0/image/upload/v1782302221/ChatGPT_Image_Feb_14_2026_02_39_40_PM_pdy1po.png?auto=compress&cs=tinysrgb&w=800"
-                  alt="Jane Marie Baluna - Homepage Portrait"
-                  referrerPolicy="no-referrer"
-                  className="aspect-[3/4] object-cover rounded-xl"
-                />
+                <div 
+                  className="overflow-hidden rounded-xl aspect-[3/4] cursor-crosshair"
+                  onMouseEnter={() => setIsPortraitHovered(true)}
+                  onMouseLeave={() => setIsPortraitHovered(false)}
+                >
+                  <img
+                    src="https://i.ibb.co/cXJpMdd7/Chat-GPT-Image-Jul-10-2026-12-08-38-AM.png"
+                    alt="Jane Marie Baluna - Homepage Portrait"
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out"
+                    style={{
+                      transform: isPortraitHovered ? "scale(1.18)" : "scale(1.12)",
+                      objectPosition: "center 25%",
+                    }}
+                  />
+                </div>
               </motion.div>
-              <div className="flex justify-between items-center mt-5 px-2 w-full max-w-[480px] text-[10px] tracking-widest text-amberwood-400 font-medium">
+              <div className="flex justify-between items-center mt-5 px-2 w-full max-w-[340px] md:max-w-[380px] text-[10px] tracking-widest text-amberwood-400 font-medium">
                 <span>VOLUME I / PORTRAIT</span>
                 <span>PROFESSIONAL EDITION</span>
               </div>

@@ -144,10 +144,14 @@ export default function InteractiveResume() {
           <div className="flex justify-center mt-3">
             <div className="w-28 h-28 rounded-full overflow-hidden border-2 border-white/90 p-0.5 shadow-lg bg-[#0F172A] transition-transform duration-300 hover:scale-105 cursor-pointer">
               <img
-                src="https://res.cloudinary.com/dkzomhqe0/image/upload/v1782302221/ChatGPT_Image_Feb_14_2026_02_39_40_PM_pdy1po.png"
+                src="https://i.ibb.co/cXJpMdd7/Chat-GPT-Image-Jul-10-2026-12-08-38-AM.png"
                 alt={contactInfo.name}
                 referrerPolicy="no-referrer"
-                className="w-full h-full object-cover rounded-full transition-transform duration-500 hover:scale-115"
+                className="w-full h-full object-cover rounded-full transition-transform duration-500 hover:brightness-110"
+                style={{
+                  transform: "scale(1.15)",
+                  objectPosition: "center 22%",
+                }}
               />
             </div>
           </div>
@@ -462,10 +466,14 @@ export default function InteractiveResume() {
                 <div className="flex flex-col items-center text-center">
                   <div className="w-28 h-28 rounded-full overflow-hidden border-2 border-ochre p-1 shadow-lg shadow-ochre/10 mb-4 hover:scale-105 transition-transform duration-300">
                     <img
-                      src="https://res.cloudinary.com/dkzomhqe0/image/upload/v1782302221/ChatGPT_Image_Feb_14_2026_02_39_40_PM_pdy1po.png"
+                      src="https://i.ibb.co/cXJpMdd7/Chat-GPT-Image-Jul-10-2026-12-08-38-AM.png"
                       alt={contactInfo.name}
                       referrerPolicy="no-referrer"
                       className="w-full h-full object-cover rounded-full"
+                      style={{
+                        transform: "scale(1.15)",
+                        objectPosition: "center 22%",
+                      }}
                     />
                   </div>
                   <h3 className="font-serif text-2xl text-parchment font-light tracking-wide leading-tight">
