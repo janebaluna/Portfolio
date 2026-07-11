@@ -157,7 +157,7 @@ using (SqlConnection conn = new SqlConnection(connStr)) {
     title: "Circle Area Calculator",
     icon: "⭕",
     category: "Web Development",
-    image: "/src/assets/images/aesthetic_calculator_preview_1783126669381.jpg",
+    image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800",
     desc: "A JavaScript web page that computes and displays the area of a circle given a fixed radius, demonstrating variable declarations, arithmetic operators, and multiple output methods in JavaScript.",
     details: [
       "Declared variables using let and const for radius, pi, area, message, and a boolean isCircle",

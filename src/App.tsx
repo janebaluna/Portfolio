@@ -36,6 +36,7 @@ import Navbar from "./components/Navbar";
 import ProjectModal from "./components/ProjectModal";
 import InteractiveResume from "./components/InteractiveResume";
 import CapstoneBlog from "./components/CapstoneBlog";
+import janePortrait from "./assets/images/jane_custom_photo.png";
 import {
   projects,
   skills,
@@ -332,9 +333,8 @@ export default function App() {
                   onMouseLeave={() => setIsPortraitHovered(false)}
                 >
                   <img
-                    src="https://i.ibb.co/cXJpMdd7/Chat-GPT-Image-Jul-10-2026-12-08-38-AM.png"
+                    src={janePortrait}
                     alt="Jane Marie Baluna - Homepage Portrait"
-                    referrerPolicy="no-referrer"
                     className="w-full h-full object-cover transition-transform duration-700 ease-out"
                     style={{
                       transform: isPortraitHovered ? "scale(1.18)" : "scale(1.12)",
