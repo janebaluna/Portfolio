@@ -53,7 +53,7 @@ export default function Navbar({ activeSection }: NavbarProps) {
         </a>
 
         {/* Desktop navigation */}
-        <nav className="hidden lg:flex flex-wrap items-center justify-center gap-x-5 xl:gap-x-6 text-[9px] xl:text-[10px] uppercase tracking-[0.2em] font-medium">
+        <nav className="hidden md:flex flex-wrap items-center justify-center gap-x-4 lg:gap-x-5 xl:gap-x-6 text-[8px] md:text-[9px] xl:text-[10px] uppercase tracking-[0.15em] lg:tracking-[0.2em] font-medium">
           {navItems.map((item) => (
             <a
               key={item.label}
@@ -86,7 +86,7 @@ export default function Navbar({ activeSection }: NavbarProps) {
           {/* Mobile menu trigger */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden text-amberwood-300 hover:text-amberwood-100 p-2"
+            className="md:hidden text-amberwood-300 hover:text-amberwood-100 p-2"
             aria-label="Toggle Navigation Menu"
           >
             {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -96,7 +96,7 @@ export default function Navbar({ activeSection }: NavbarProps) {
 
       {/* Mobile drawer */}
       {isOpen && (
-        <div className="lg:hidden bg-[#1b0d09] border-t border-amberwood-900/40 px-6 py-6 flex flex-col space-y-4 text-[10px] uppercase tracking-[0.2em] font-medium text-amberwood-300 shadow-2xl">
+        <div className="md:hidden bg-[#1b0d09] border-t border-amberwood-900/40 px-6 py-6 flex flex-col space-y-4 text-[10px] uppercase tracking-[0.2em] font-medium text-amberwood-300 shadow-2xl">
           {navItems.map((item) => (
             <a
               key={item.label}

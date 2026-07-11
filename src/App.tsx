@@ -337,8 +337,8 @@ export default function App() {
                     alt="Jane Marie Baluna - Homepage Portrait"
                     className="w-full h-full object-cover transition-transform duration-700 ease-out"
                     style={{
-                      transform: isPortraitHovered ? "scale(1.18)" : "scale(1.12)",
-                      objectPosition: "center 25%",
+                      transform: isPortraitHovered ? "scale(1.52)" : "scale(1.42)",
+                      objectPosition: "center 18%",
                     }}
                   />
                 </div>

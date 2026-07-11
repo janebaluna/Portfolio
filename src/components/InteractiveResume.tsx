@@ -147,10 +147,10 @@ export default function InteractiveResume() {
               <img
                 src={janePortrait}
                 alt={contactInfo.name}
-                className="w-full h-full object-cover rounded-full transition-transform duration-500 hover:brightness-110"
+                className="w-full h-full object-cover object-center rounded-full transition-transform duration-500 hover:brightness-110"
                 style={{
-                  transform: "scale(1.15)",
-                  objectPosition: "center 22%",
+                  transform: "scale(1.42)",
+                  objectPosition: "center 18%",
                 }}
               />
             </div>
@@ -468,10 +468,10 @@ export default function InteractiveResume() {
                     <img
                       src={janePortrait}
                       alt={contactInfo.name}
-                      className="w-full h-full object-cover rounded-full"
+                      className="w-full h-full object-cover object-center rounded-full"
                       style={{
-                        transform: "scale(1.15)",
-                        objectPosition: "center 22%",
+                        transform: "scale(1.42)",
+                        objectPosition: "center 18%",
                       }}
                     />
                   </div>
