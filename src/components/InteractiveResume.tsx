@@ -149,8 +149,8 @@ export default function InteractiveResume() {
                 alt={contactInfo.name}
                 className="w-full h-full object-cover object-center rounded-full transition-transform duration-500 hover:brightness-110"
                 style={{
-                  transform: "scale(1.42)",
-                  objectPosition: "center 18%",
+                  transform: "scale(1.35)",
+                  objectPosition: "center 38%",
                 }}
               />
             </div>
@@ -470,8 +470,8 @@ export default function InteractiveResume() {
                       alt={contactInfo.name}
                       className="w-full h-full object-cover object-center rounded-full"
                       style={{
-                        transform: "scale(1.42)",
-                        objectPosition: "center 18%",
+                        transform: "scale(1.35)",
+                        objectPosition: "center 38%",
                       }}
                     />
                   </div>
