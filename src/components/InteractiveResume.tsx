@@ -146,6 +146,16 @@ export default function InteractiveResume() {
             <div className="w-28 h-28 rounded-full overflow-hidden border-2 border-white/90 p-0.5 shadow-lg bg-[#0F172A] transition-transform duration-300 hover:scale-105 cursor-pointer">
               <img
                 src={janePortrait}
+                onError={(e) => {
+                  const img = e.currentTarget;
+                  if (!img.src.startsWith('https://i.ibb.co/')) {
+                    if (!img.src.endsWith('/jane_custom_photo.png')) {
+                      img.src = '/jane_custom_photo.png';
+                    } else {
+                      img.src = 'https://i.ibb.co/cXJpMdd7/Chat-GPT-Image-Jul-10-2026-12-08-38-AM.png';
+                    }
+                  }
+                }}
                 alt={contactInfo.name}
                 className="w-full h-full object-cover object-center rounded-full transition-transform duration-500 hover:brightness-110"
                 style={{
@@ -467,6 +477,16 @@ export default function InteractiveResume() {
                   <div className="w-28 h-28 rounded-full overflow-hidden border-2 border-ochre p-1 shadow-lg shadow-ochre/10 mb-4 hover:scale-105 transition-transform duration-300">
                     <img
                       src={janePortrait}
+                      onError={(e) => {
+                        const img = e.currentTarget;
+                        if (!img.src.startsWith('https://i.ibb.co/')) {
+                          if (!img.src.endsWith('/jane_custom_photo.png')) {
+                            img.src = '/jane_custom_photo.png';
+                          } else {
+                            img.src = 'https://i.ibb.co/cXJpMdd7/Chat-GPT-Image-Jul-10-2026-12-08-38-AM.png';
+                          }
+                        }
+                      }}
                       alt={contactInfo.name}
                       className="w-full h-full object-cover object-center rounded-full"
                       style={{

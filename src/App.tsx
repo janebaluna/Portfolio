@@ -334,6 +334,16 @@ export default function App() {
                 >
                   <img
                     src={janePortrait}
+                    onError={(e) => {
+                      const img = e.currentTarget;
+                      if (!img.src.startsWith('https://i.ibb.co/')) {
+                        if (!img.src.endsWith('/jane_custom_photo.png')) {
+                          img.src = '/jane_custom_photo.png';
+                        } else {
+                          img.src = 'https://i.ibb.co/cXJpMdd7/Chat-GPT-Image-Jul-10-2026-12-08-38-AM.png';
+                        }
+                      }
+                    }}
                     alt="Jane Marie Baluna - Homepage Portrait"
                     className="w-full h-full object-cover transition-transform duration-700 ease-out"
                     style={{
